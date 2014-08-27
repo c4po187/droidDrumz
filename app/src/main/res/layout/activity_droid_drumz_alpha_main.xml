@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".DroidDrumzAlphaMain" >
+
+    <GridLayout
+        android:id="@+id/grid4x3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn1"
+            android:text="@string/str_btn1"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn2"
+            android:text="@string/str_btn2"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn3"
+            android:text="@string/str_btn3"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn4"
+            android:text="@string/str_btn4"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn5"
+            android:text="@string/str_btn5"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn6"
+            android:text="@string/str_btn6"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn7"
+            android:text="@string/str_btn7"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn8"
+            android:text="@string/str_btn8"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn9"
+            android:text="@string/str_btn9"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn10"
+            android:text="@string/str_btn10"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn11"
+            android:text="@string/str_btn11"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+        <Button
+            android:id="@+id/btn12"
+            android:text="@string/str_btn12"
+            android:background="@drawable/btn_orange"
+            style="@style/ButtonText" />
+
+    </GridLayout>
+
+</RelativeLayout>

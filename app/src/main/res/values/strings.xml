@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DroidDrumz-Alpha</string>
+    <string name="action_about">About</string>
+
+    <!-- Button Alphas -->
+    <string name="str_btn1">A</string>
+    <string name="str_btn2">B</string>
+    <string name="str_btn3">C</string>
+    <string name="str_btn4">D</string>
+    <string name="str_btn5">E</string>
+    <string name="str_btn6">F</string>
+    <string name="str_btn7">G</string>
+    <string name="str_btn8">H</string>
+    <string name="str_btn9">I</string>
+    <string name="str_btn10">J</string>
+    <string name="str_btn11">K</string>
+    <string name="str_btn12">L</string>
+
+</resources>
