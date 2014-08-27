@@ -1,6 +1,8 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +37,17 @@ public class DroidDrumzAlphaMain extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_about) {
+            final AlertDialog.Builder about_builder = new AlertDialog.Builder(this);
+            about_builder.setTitle(R.string._action_about).setMessage(R.string.about_content);
+            about_builder.setPositiveButton(R.string.action_about_ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog about_dialog = about_builder.create();
+            about_dialog.show();
         }
         return super.onOptionsItemSelected(item);
     }

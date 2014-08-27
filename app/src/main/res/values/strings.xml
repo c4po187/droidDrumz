@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">DroidDrumz-Alpha</string>
-    <string name="action_about">About</string>
+    <string name="_action_about">About</string>
+    <string name="action_about_ok">OK</string>
+    <string name="about_content"><b>DroidDrumz 2014</b>\n\nThis application is still\nunder development.\n\nAuthor: Rici Underwood</string>
 
     <!-- Button Alphas -->
     <string name="str_btn1">A</string>
