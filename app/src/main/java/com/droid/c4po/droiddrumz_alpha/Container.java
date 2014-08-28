@@ -21,10 +21,6 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
-/**
- * Created by c4po on 25/08/14.
- */
-
 import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -40,13 +36,24 @@ import android.widget.GridLayout;
 import android.widget.Button;
 import android.view.ViewTreeObserver;
 
-import java.lang.reflect.InvocationTargetException;
-
+/**
+ * Class that provides a platform to the grid, and its children (hit pads)
+ * which happen to be buttons.
+ */
 public class Container {
 
+    /**
+     * Members
+     */
     private Activity _currentActivity;
 
-    public Container(final Activity currentActivity) {
+    /**
+     * Constructor
+     *
+     * @param currentActivity :
+     *                        Parameter that represents the main Activity class.
+     */
+    public Container(final Activity currentActivity, final SoundManager soundManager) {
         _currentActivity = currentActivity;
         GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
         ViewTreeObserver vto_a = gl.getViewTreeObserver();
@@ -55,14 +62,27 @@ public class Container {
             @Override
             public void onGlobalLayout() {
                 GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
-                reorganizeGrid(gl);
+                reorganizeGrid(gl, soundManager);
                 ViewTreeObserver vto_b = gl.getViewTreeObserver();
                 vto_b.removeOnGlobalLayoutListener(this);
             }
         });
     }
 
-    public void reorganizeGrid(GridLayout gl) {
+    /*********************************************************************
+     * Methods ***********************************************************
+     *********************************************************************/
+
+    /**
+     * For some reason, which is beyond myself, the GridLayout does not seem to
+     * be drawn as one would expect. Therefore after its initial draw call further
+     * up in the hierarchy, we recalculate its dimensions, along with its child
+     * elements.
+     *
+     * @param gl :
+     *           Parameter that represents the GridLayout.
+     */
+    public void reorganizeGrid(GridLayout gl, SoundManager soundManager) {
         // Get Window Metrics and apply our layout based on what we retrieve.
         WindowManager winManager = _currentActivity.getWindowManager();
         Display display = winManager.getDefaultDisplay();
@@ -91,13 +111,18 @@ public class Container {
                     e.getMessage());
             }
         }
-        heightPixels /= 1;
+
+        // Resize the grid based on users device
+        int five_percent_x = ((widthPixels / 100) * 5);
+        int five_percent_y = ((heightPixels / 100) * 5);
+        gl.setLeft(five_percent_x);
+        gl.setTop(five_percent_y);
+        gl.setMinimumWidth(widthPixels - five_percent_x);
+        gl.setMinimumHeight(heightPixels - five_percent_y);
 
         // Draw button sizes relative to the modified grid calculations.
         Button tmp_btn;
-        int btn_width = ((widthPixels - 20) / gl.getColumnCount());
-        // Subtract 10%
-        btn_width -= (btn_width / 10) * 2;
+        int btn_width = ((gl.getWidth() / gl.getColumnCount()) - (five_percent_x * 2));
 
         /* Create custom font using CustomFontHelper class
          * to avoid a crash. The typeface class does not
@@ -107,152 +132,45 @@ public class Container {
         Typeface btn_font = CustomFontHelper.get(_currentActivity, "Ghang.ttf");
 
         for (int i = 0; i < gl.getChildCount(); ++i) {
-            tmp_btn = (Button)gl.getChildAt(i);
+            tmp_btn = (Button) gl.getChildAt(i);
             tmp_btn.setWidth(btn_width);
             tmp_btn.setHeight(btn_width);
             tmp_btn.setTypeface(btn_font);
             ViewGroup.MarginLayoutParams btn_margin =
-                    (ViewGroup.MarginLayoutParams)tmp_btn.getLayoutParams();
-            btn_margin.leftMargin = 10;
-            btn_margin.bottomMargin = 10;
-            btn_margin.rightMargin = 10;
-            btn_margin.topMargin = 10;
+                    (ViewGroup.MarginLayoutParams) tmp_btn.getLayoutParams();
+            btn_margin.leftMargin = five_percent_x;
+            btn_margin.bottomMargin = five_percent_x;
+            btn_margin.rightMargin = five_percent_x;
+            btn_margin.topMargin = five_percent_x;
+            assignSoundToButton(i, tmp_btn, soundManager);
         }
     }
 
-    public void buttonRoutine(final SoundManager soundManager) {
-        Button _a = (Button)_currentActivity.findViewById(R.id.btn1);
-        _a.setOnTouchListener(new View.OnTouchListener() {
+    /**
+     * This method is called from within a loop in the above method.
+     * It assigns a sound from the sound back and a way of detecting
+     * a touch event to each hit pad (button). Its final goal is to
+     * get each button to play a sound from the sound bank.
+     *
+     * @param i             :
+     *                      Parameter represents the current iteration
+     *                      of the loop from the previous method.
+     * @param btn           :
+     *                      Parameter represents a button.
+     * @param soundManager  :
+     *                      Parameter represents the SoundManager class.
+     */
+    private void assignSoundToButton(int i, Button btn, SoundManager soundManager) {
+        final int f_i = i;
+        final SoundManager f_soundManager = soundManager;
+        btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(0);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _b = (Button)_currentActivity.findViewById(R.id.btn2);
-        _b.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(1);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _c = (Button)_currentActivity.findViewById(R.id.btn3);
-        _c.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(2);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _d = (Button)_currentActivity.findViewById(R.id.btn4);
-        _d.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(3);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _e = (Button)_currentActivity.findViewById(R.id.btn5);
-        _e.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(4);
-                    //return true;
-
-                }
-                return false;
-            }
-        });
-        Button _f = (Button)_currentActivity.findViewById(R.id.btn6);
-        _f.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(5);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _g = (Button)_currentActivity.findViewById(R.id.btn7);
-        _g.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(6);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _h = (Button)_currentActivity.findViewById(R.id.btn8);
-        _h.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(7);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _i = (Button)_currentActivity.findViewById(R.id.btn9);
-        _i.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(8);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _j = (Button)_currentActivity.findViewById(R.id.btn10);
-        _j.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(9);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _k = (Button)_currentActivity.findViewById(R.id.btn11);
-        _k.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(10);
-                    //return true;
-                }
-                return false;
-            }
-        });
-        Button _l = (Button)_currentActivity.findViewById(R.id.btn12);
-        _l.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent .getAction() == MotionEvent.ACTION_DOWN) {
-                    soundManager.playSound(11);
-                    //return true;
-                }
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                    f_soundManager.playSound(f_i);
                 return false;
             }
         });
     }
+
 }

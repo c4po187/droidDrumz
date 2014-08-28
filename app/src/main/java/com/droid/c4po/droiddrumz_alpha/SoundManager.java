@@ -35,28 +35,26 @@ public class SoundManager extends SoundPool {
     /**
      * Members
      */
-    private AudioManager _audioManager;
     private float _volume;
-    private int _streamID;
     private int _presetSoundIDs[];
-
-    /**
-     * Accessors & Mutators
-     */
-    public AudioManager getAudioManager() {
-        return _audioManager;
-    }
+    // We'll use this to do something interesting later...
+    private int _streamID;
 
     /**
      * Constructor
-     * @param maxStreams :
-     *                   Maximum number of streams this class
-     *                   can handle synchronously.
-     * @param streamType :
-     *                   AudioManager stream type.
-     * @param srcQuality :
-     *                   Needed but unused parameter: always
-     *                   set to zero.
+     *
+     * @param maxStreams      :
+     *                        Maximum number of streams this class
+     *                        can handle synchronously.
+     * @param streamType      :
+     *                        AudioManager stream type.
+     * @param srcQuality      :
+     *                        Needed but unused parameter: always
+     *                        set to zero.
+     * @param currentActivity :
+     *                        Parameter that passes the Activity
+     *                        class, merely needed to access many
+     *                        of its useful methods.
      */
     public SoundManager(int maxStreams, int streamType, int srcQuality,
                         Activity currentActivity) {
@@ -70,6 +68,7 @@ public class SoundManager extends SoundPool {
 
     /**
      * Initialise all objects and data within this class.
+     *
      * @param currentActivity :
      *                        Parameter passed due it holding some vary valuable
      *                        members and methods, of which are needed in order
@@ -77,10 +76,10 @@ public class SoundManager extends SoundPool {
      */
     private void init(Activity currentActivity) {
         // Set up AudioManager
-        _audioManager = (AudioManager) currentActivity.getSystemService(
+        AudioManager audioManager = (AudioManager) currentActivity.getSystemService(
                 Context.AUDIO_SERVICE);
-        _volume = ((float) _audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) /
-                (float) _audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        _volume = ((float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) /
+                (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         // Set up preset sounds
@@ -101,7 +100,9 @@ public class SoundManager extends SoundPool {
     }
 
     /**
-     * Play a sound from the sound bank, based on the given soundID.
+     * Plays a sound from the sound bank when a pad is pressed,
+     * based on the given soundID.
+     *
      * @param soundID :
      *                Index of sound in sound bank(_presetSoundIDs).
      */

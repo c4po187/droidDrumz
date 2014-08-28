@@ -21,20 +21,43 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
-/**
- * Created by c4po on 26/08/14.
- */
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
 import java.util.Hashtable;
 
+/**
+ * Class that aids in the creation of a Typeface from true-type fonts.
+ * The Typeface class, itself achieves this task. However, it does not
+ * handle exceptions, resulting in an applications crash. This class
+ * does catch exceptions, and reports it. If a Typeface cannot be
+ * created, we just default back to a generic font and use that rather
+ * than exiting the program.
+ */
 public class CustomFontHelper {
 
+    /**
+     * Members
+     */
     private static final String TAG = "CustomFontHelper";
     private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
 
+    /*********************************************************************
+     * Methods ***********************************************************
+     *********************************************************************/
+
+    /**
+     * Method that tries to create a Typeface from a given true-type font.
+     *
+     * @param c         :
+     *                  Parameter represents a context.
+     * @param assetPath :
+     *                  Parameter represents a string that is a path to
+     *                  the true-type font.
+     * @return          :
+     *                  Returns a Typeface created from the true-type font
+     *                  if successful. Returns a null Typeface otherwise.
+     */
     public static Typeface get(Context c, String assetPath) {
         synchronized (cache) {
             if (!cache.containsKey(assetPath)) {

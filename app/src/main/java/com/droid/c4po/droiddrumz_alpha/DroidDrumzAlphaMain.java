@@ -22,54 +22,87 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.AudioManager;
 
-
+/**
+ * This is the main activity class. The application pretty much
+ * starts off from here. Many of the other classes in this project
+ * will be initialized from here. This class sits at the top of
+ * the hierarchy.
+ */
 public class DroidDrumzAlphaMain extends Activity {
 
-    private Container _container;
+    /**
+     * Members
+     */
     private SoundManager _soundManager;
+    private MenuManager _menuManager;
 
+    /*********************************************************************
+     * Methods ***********************************************************
+     *********************************************************************/
+
+    /**
+     * As soon as the application and this class fires up, objects
+     * and the layout need to be created. This method takes care of
+     * just that.
+     *
+     * @param savedInstanceState :
+     *                           Parameter that holds a state of a
+     *                           previous instance of this application.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_droid_drumz_alpha_main);
         _soundManager = new SoundManager(12, AudioManager.STREAM_MUSIC, 0, this);
-        _container = new Container(this);
+        Container container = new Container(this, _soundManager);
+        _menuManager = new MenuManager(this);
     }
 
-
+    /**
+     * Creates the action bar menu. Currently there is one option,
+     * the 'About' option, detailing the application and myself,
+     * the author.
+     *
+     * @param menu :
+     *             Parameter that passes a menu, in order to access
+     *             the action bar.
+     * @return     :
+     *             Returns true upon completion.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.droid_drumz_alpha_main, menu);
-        _container.buttonRoutine(_soundManager);
         return true;
     }
 
+    /**
+     * This method is called when an option from the action bar
+     * has been selected. The selection is then processed and
+     * the appropriate methods are called, reflecting the selected
+     * option.
+     *
+     * @param item :
+     *             Parameter represents an item from the action bar.
+     * @return     :
+     *             Returns base class method, passing item as an
+     *             argument.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_about) {
-            final AlertDialog.Builder about_builder = new AlertDialog.Builder(this);
-            about_builder.setTitle(R.string._action_about).setMessage(R.string.about_content);
-            about_builder.setPositiveButton(R.string.action_about_ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            AlertDialog about_dialog = about_builder.create();
-            about_dialog.show();
-        }
+        if (id == R.id.action_about)
+            _menuManager.actionBar_AboutSelected();
+        if (id == R.id.action_themes)
+            _menuManager.themesClicked();
         return super.onOptionsItemSelected(item);
     }
 }
