@@ -10,8 +10,6 @@
     <string name="about_content"><b>DroidDrumz 2014</b>\n\nThis application is still\nunder development.\n\nAuthor: Rici Underwood</string>
 
     <string name="_action_themes">Themes</string>
-    <string name="thm_a">Default</string>
-    <string name="thm_b">Girly</string>
     <string name="tok">OK</string>
     <string name="tc">Cancel</string>
 

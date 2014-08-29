@@ -32,9 +32,10 @@ import android.app.Activity;
  */
 public class SoundManager extends SoundPool {
 
-    /**
-     * Members
-     */
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
     private float _volume;
     private int _presetSoundIDs[];
     // We'll use this to do something interesting later...

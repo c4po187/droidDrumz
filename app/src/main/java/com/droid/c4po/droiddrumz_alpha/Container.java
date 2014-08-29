@@ -42,9 +42,10 @@ import android.view.ViewTreeObserver;
  */
 public class Container {
 
-    /**
-     * Members
-     */
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
     private Activity _currentActivity;
 
     /**
@@ -52,6 +53,8 @@ public class Container {
      *
      * @param currentActivity :
      *                        Parameter that represents the main Activity class.
+     * @param soundManager    :
+     *                        Parameter that represents the SoundManager class.
      */
     public Container(final Activity currentActivity, final SoundManager soundManager) {
         _currentActivity = currentActivity;
@@ -79,8 +82,10 @@ public class Container {
      * up in the hierarchy, we recalculate its dimensions, along with its child
      * elements.
      *
-     * @param gl :
-     *           Parameter that represents the GridLayout.
+     * @param gl           :
+     *                     Parameter that represents the GridLayout.
+     * @param soundManager :
+     *                     Parameter that represents the SoundManager class.
      */
     public void reorganizeGrid(GridLayout gl, SoundManager soundManager) {
         // Get Window Metrics and apply our layout based on what we retrieve.
@@ -89,6 +94,7 @@ public class Container {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int widthPixels = 0, heightPixels = 0;
+
         if (Build.VERSION.SDK_INT >= 1 && Build.VERSION.SDK_INT < 14) {
             widthPixels = metrics.widthPixels;
             heightPixels = metrics.heightPixels;

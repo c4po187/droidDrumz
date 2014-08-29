@@ -24,25 +24,32 @@ package com.droid.c4po.droiddrumz_alpha;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.view.ViewTreeObserver;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
-
-enum THEME_CHOICE {
-    DEFAULT, GIRLY
-}
 
 /**
  * Class that manages all Menu interactions
  */
 public class MenuManager {
 
-    /**
-     * Members
-     */
+    /*********************************************************************
+     * Enumerators *******************************************************
+     *********************************************************************/
+
+    public enum THEME_CHOICE {
+        DEFAULT, GIRLY, PUNK, BLOBBY
+    }
+
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
     private Activity _currentActivity;
     private THEME_CHOICE _theme_choice;
+    private int _theme_current_index;
 
     /**
      * Constructor
@@ -53,7 +60,12 @@ public class MenuManager {
     public MenuManager(Activity currentActivity) {
         _currentActivity = currentActivity;
         _theme_choice = THEME_CHOICE.DEFAULT;
+        _theme_current_index = 0;
     }
+
+    /*********************************************************************
+     * Methods ***********************************************************
+     *********************************************************************/
 
     /**
      * Method that handles the About button being clicked.
@@ -72,17 +84,77 @@ public class MenuManager {
     }
 
     /**
-     * Method that changes the theme.
-     *
-     * TODO: Fix this method, as button colours and background are not changing.
+     * Method that switches the theme to the user's choice, after
+     * we have dealt with the menu interaction.
+     */
+    private void themeSwitcher() {
+        // DEBUG
+        Log.e("Current Theme Index: ", Integer.toString(_theme_current_index));
+
+        // Initialize a Typeface
+        Typeface btn_font = CustomFontHelper.get(_currentActivity, "");
+
+        // Now let's switch the theme, first off we'll set the background and font
+        RelativeLayout rl = (RelativeLayout)_currentActivity.findViewById(R.id.lay);
+        switch(_theme_choice) {
+            case DEFAULT:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.hexagrid));
+                btn_font = CustomFontHelper.get(_currentActivity, "Ghang.ttf");
+                break;
+            case GIRLY:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.balloons));
+                btn_font = CustomFontHelper.get(_currentActivity, "SoupLeaf.ttf");
+                break;
+            case PUNK:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.cropped_punk_collage));
+                btn_font = CustomFontHelper.get(_currentActivity, "BROKEN15.TTF");
+                break;
+            case BLOBBY:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.blobby));
+                btn_font = CustomFontHelper.get(_currentActivity, "Stab.ttf");
+                break;
+        }
+
+        Button btn;
+        GridLayout gl = (GridLayout)_currentActivity.findViewById(R.id.grid4x3);
+
+        // Within this loop we'll apply the font and colour scheme to each button
+        for (int i = 0; i < gl.getChildCount(); ++i) {
+            btn = (Button)gl.getChildAt(i);
+            btn.setTypeface(btn_font);
+            if (_theme_choice == THEME_CHOICE.DEFAULT) {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_orange));
+            } else if (_theme_choice == THEME_CHOICE.GIRLY) {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_pink));
+            } else if (_theme_choice == THEME_CHOICE.PUNK) {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_snotty));
+            } else {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_blobz));
+            }
+        }
+    }
+
+    /**
+     * Method that displays the theme menu.
      */
     public void themesClicked() {
-        String[] theme_list = { "Default", "Girly" };
+        final int previous_theme_index = _theme_current_index;
+        String[] theme_list = { "Default", "Girly", "Punk", "Blobby" };
         final AlertDialog.Builder themes_builder = new AlertDialog.Builder(_currentActivity);
         themes_builder.setTitle(R.string._action_themes);
-        themes_builder.setSingleChoiceItems(theme_list, 0, new DialogInterface.OnClickListener() {
+        themes_builder.setSingleChoiceItems(theme_list, _theme_current_index,
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+                _theme_current_index = which;
                 switch (which) {
                     case 0:
                         _theme_choice = THEME_CHOICE.DEFAULT;
@@ -90,55 +162,25 @@ public class MenuManager {
                     case 1:
                         _theme_choice = THEME_CHOICE.GIRLY;
                         break;
+                    case 2:
+                        _theme_choice = THEME_CHOICE.PUNK;
+                        break;
+                    case 3:
+                        _theme_choice = THEME_CHOICE.BLOBBY;
+                        break;
                 }
             }
         }).setPositiveButton(R.string.tok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                final GridLayout gl = (GridLayout) _currentActivity.findViewById(R.id.grid4x3);
-                final ViewTreeObserver vto = gl.getViewTreeObserver();
-                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        Button btn;
-                        // Change button colours
-                        for (int i = 0; i < gl.getChildCount(); ++i) {
-                            btn = (Button) gl.getChildAt(i);
-                            if (_theme_choice == THEME_CHOICE.DEFAULT) {
-                                btn.setBackground(_currentActivity.getResources().getDrawable(
-                                        R.drawable.btn_orange));
-                            }
-                            if (_theme_choice == THEME_CHOICE.GIRLY) {
-                                btn.setBackground(_currentActivity.getResources().getDrawable(
-                                        R.drawable.btn_pink));
-                            }
-                        }
-                        vto.removeOnGlobalLayoutListener(this);
-                    }
-                });
-                final RelativeLayout rl = (RelativeLayout)_currentActivity.findViewById(R.id.lay);
-                final ViewTreeObserver vtoo = rl.getViewTreeObserver();
-                vtoo.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        // Change Backgrounds
-                        if (_theme_choice == THEME_CHOICE.DEFAULT) {
-                            rl.setBackground(_currentActivity.getResources().getDrawable(
-                                    R.drawable.hexagrid));
-                        }
-                        if (_theme_choice == THEME_CHOICE.GIRLY) {
-                            rl.setBackground(_currentActivity.getResources().getDrawable(
-                                    R.drawable.balloons));
-                        }
-                        vtoo.removeOnGlobalLayoutListener(this);
-                    }
-                });
                 dialogInterface.dismiss();
+                themeSwitcher();
             }
         }).setNegativeButton(R.string.tc, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+                dialogInterface.cancel();
+                _theme_current_index = previous_theme_index;
             }
         });
         AlertDialog theme_dialog = themes_builder.create();

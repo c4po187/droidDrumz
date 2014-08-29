@@ -35,9 +35,10 @@ import android.media.AudioManager;
  */
 public class DroidDrumzAlphaMain extends Activity {
 
-    /**
-     * Members
-     */
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
     private SoundManager _soundManager;
     private MenuManager _menuManager;
 

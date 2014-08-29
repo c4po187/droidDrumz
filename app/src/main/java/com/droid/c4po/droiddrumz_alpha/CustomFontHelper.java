@@ -36,9 +36,10 @@ import java.util.Hashtable;
  */
 public class CustomFontHelper {
 
-    /**
-     * Members
-     */
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
     private static final String TAG = "CustomFontHelper";
     private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
 
