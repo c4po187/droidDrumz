@@ -177,6 +177,13 @@ public class Container {
                 return false;
             }
         });
+        btn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Log.e("Button ", Integer.toString(f_i) + ": busted long click, now make a menu!");
+                return false;
+            }
+        });
     }
 
 }

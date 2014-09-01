@@ -143,7 +143,8 @@ public class MenuManager {
     }
 
     /**
-     * Method that displays the theme menu.
+     * Method that displays the theme menu and sets the enumerator on 
+     * users choice.
      */
     public void themesClicked() {
         final int previous_theme_index = _theme_current_index;
