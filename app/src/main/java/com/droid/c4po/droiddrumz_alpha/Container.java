@@ -21,7 +21,7 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -46,7 +46,7 @@ public class Container {
      * Members ***********************************************************
      *********************************************************************/
 
-    private Activity _currentActivity;
+    private DroidDrumzAlphaMain _currentActivity;
 
     /**
      * Constructor
@@ -56,7 +56,7 @@ public class Container {
      * @param soundManager    :
      *                        Parameter that represents the SoundManager class.
      */
-    public Container(final Activity currentActivity, final SoundManager soundManager) {
+    public Container(final DroidDrumzAlphaMain currentActivity, final SoundManager soundManager) {
         _currentActivity = currentActivity;
         GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
         ViewTreeObserver vto_a = gl.getViewTreeObserver();
@@ -180,7 +180,12 @@ public class Container {
         btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Log.e("Button ", Integer.toString(f_i) + ": busted long click, now make a menu!");
+                Log.d("Button ", Integer.toString(f_i) + ": busted long click, now make a menu!");
+                // Send button index to Main activity class
+                _currentActivity.setBtn_index(f_i);
+                Intent pa_intent = new Intent(_currentActivity, PadAssignmentMenu.class);
+                // We may want to use putExtra to send data across at a later date
+                _currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
                 return false;
             }
         });

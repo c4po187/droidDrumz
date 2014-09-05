@@ -22,10 +22,12 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.AudioManager;
+import android.widget.Toast;
 
 /**
  * This is the main activity class. The application pretty much
@@ -39,8 +41,22 @@ public class DroidDrumzAlphaMain extends Activity {
      * Members ***********************************************************
      *********************************************************************/
 
+    public static final int REQUEST_CODE = 0x0000000A;
     private SoundManager _soundManager;
     private MenuManager _menuManager;
+    private int _btn_index;
+
+    /*********************************************************************
+     * Getters & Setters *************************************************
+     *********************************************************************/
+
+    public int getBtn_index() {
+        return _btn_index;
+    }
+
+    public void setBtn_index(int btn_index) {
+        _btn_index = btn_index;
+    }
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -105,5 +121,32 @@ public class DroidDrumzAlphaMain extends Activity {
         if (id == R.id.action_themes)
             _menuManager.themesClicked();
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method is called when the Pad Assignment Activity has finished.
+     * Here we collect the results of the activity, which in this case is
+     * the chosen item from the list.
+     *
+     * @param requestCode :
+     *                    Parameter represents the returned request code
+     *                    from the completed activity.
+     * @param resultCode  :
+     *                    Parameter represents the result code from the
+     *                    completed activity.
+     * @param data        :
+     *                    Parameter represents the actual data from the
+     *                    completed activity. We can access any values
+     *                    that were specified for this stage.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data.hasExtra("returnKey")) {
+                String userChoiceStr = data.getExtras().getString("returnKey");
+                if (userChoiceStr != null)
+                    Toast.makeText(this, userChoiceStr, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

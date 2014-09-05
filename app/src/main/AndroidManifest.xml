@@ -17,6 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PadAssignmentMenu"
+            android:label="@string/pad_ssign_label" >
+        </activity>
     </application>
 
 </manifest>

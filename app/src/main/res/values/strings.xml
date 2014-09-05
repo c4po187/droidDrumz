@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Application Name -->
+
     <string name="app_name">DroidDrumz-Alpha</string>
+
+    <!-- General Debug String -->
+
+    <string name="DBG_STR">Hello, DroidDrumz!</string>
 
     <!-- Action Menu -->
 
@@ -14,6 +20,7 @@
     <string name="tc">Cancel</string>
 
     <!-- Button Alphas -->
+
     <string name="str_btn1">A</string>
     <string name="str_btn2">B</string>
     <string name="str_btn3">C</string>
@@ -26,5 +33,9 @@
     <string name="str_btn10">J</string>
     <string name="str_btn11">K</string>
     <string name="str_btn12">L</string>
+
+    <!-- Pad Assignment Menu -->
+    <string name="pad_ssign_label">Pad Assignment Menu</string>
+    <string name="row_img_descr">Icon to represent a particular sound type</string>
 
 </resources>

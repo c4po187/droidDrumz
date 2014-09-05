@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">10dp</dimen>   <!-- orig = 16dp -->
     <dimen name="activity_vertical_margin">10dp</dimen>     <!-- orig = 16dp -->
+
+    <!-- Pad Assignment Menu Dimensions -->
+    <dimen name="pa_menu_icon_top_margin">5dp</dimen>
+    <dimen name="pa_menu_icon_left_margin">5dp</dimen>
+    <dimen name="pa_menu_icon_right_margin">12.5dp</dimen>
+
 </resources>

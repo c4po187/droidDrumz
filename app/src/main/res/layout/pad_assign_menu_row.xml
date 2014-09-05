@@ -21,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="@string/DBG_STR"
+        android:text="@id/pa_text"
         android:layout_toRightOf="@id/pa_icon"
         android:layout_alignBottom="@id/pa_icon" />
 

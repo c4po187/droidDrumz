@@ -89,7 +89,7 @@ public class MenuManager {
      */
     private void themeSwitcher() {
         // DEBUG
-        Log.e("Current Theme Index: ", Integer.toString(_theme_current_index));
+        Log.d("Current Theme Index: ", Integer.toString(_theme_current_index));
 
         // Initialize a Typeface
         Typeface btn_font = CustomFontHelper.get(_currentActivity, "");
