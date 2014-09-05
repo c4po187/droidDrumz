@@ -32,6 +32,8 @@ import android.widget.RelativeLayout;
 
 /**
  * Class that manages all Menu interactions
+ *
+ * TODO: Fix minor bug in Theme Switcher
  */
 public class MenuManager {
 

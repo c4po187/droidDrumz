@@ -35,7 +35,7 @@
     <string name="str_btn12">L</string>
 
     <!-- Pad Assignment Menu -->
-    <string name="pad_ssign_label">Pad Assignment Menu</string>
+    <string name="pad_assign_label">Pad Assignment Menu</string>
     <string name="row_img_descr">Icon to represent a particular sound type</string>
 
 </resources>

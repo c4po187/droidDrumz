@@ -10,7 +10,7 @@
         <activity
             android:name=".DroidDrumzAlphaMain"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +19,7 @@
         </activity>
         <activity
             android:name=".PadAssignmentMenu"
-            android:label="@string/pad_ssign_label" >
+            android:label="@string/pad_assign_label" >
         </activity>
     </application>
 
