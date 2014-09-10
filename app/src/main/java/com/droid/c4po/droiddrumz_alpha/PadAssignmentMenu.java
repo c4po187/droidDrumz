@@ -28,6 +28,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Class that displays the Sound Bank, and assigns a sound to
  * the pad that initiated this class.
@@ -40,10 +42,8 @@ public class PadAssignmentMenu extends ListActivity {
      * Members ***********************************************************
      *********************************************************************/
 
-    //private String[] dbg_vals;
-    private String[] _sound_bank;
+    ArrayList<String> _sound_bank;
     private String _chosenItem;
-    private SoundManager _soundManager;
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -58,36 +58,10 @@ public class PadAssignmentMenu extends ListActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        _soundManager = (SoundManager)getIntent().getSerializableExtra("soundman");
-        if (initSoundBank()) {
-            ArrayAdapter<String> pa_adapter = new ArrayAdapter<String>(
-                    this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
-            setListAdapter(pa_adapter);
-        }
-    }
-
-    /**
-     * This method is called from onCreate. The sound bank is compiled
-     * from the built-in library.
-     *
-     * @return :
-     *         Returns true on success.
-     */
-    private boolean initSoundBank() {
-        /**
-         * DEBUG:
-         *      Fill up the string list for testing
-         */
-        /*
-        dbg_vals = new String[] { "One", "Two", "Three", "Four", "Five" };
-        return dbg_vals.length > 0;
-        */
-        int sz_sound_bank = _soundManager.get_samples().size();
-        _sound_bank = new String[sz_sound_bank];
-        for (int i = 0; i < sz_sound_bank; ++i) {
-            _sound_bank[i] = _soundManager.get_samples().get(i).get_resource_name();
-        }
-        return _sound_bank.length > 0;
+        _sound_bank = this.getIntent().getStringArrayListExtra("soundname");
+        ArrayAdapter<String> pa_adapter = new ArrayAdapter<String>(
+                this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
+        setListAdapter(pa_adapter);
     }
 
     /**
@@ -113,7 +87,6 @@ public class PadAssignmentMenu extends ListActivity {
      * values that are needed by the callee are returned to them attached
      * to a key along with a response on whether this activity succeeded.
      */
-    /*
     @Override
     public void finish() {
         Intent returnIntent = new Intent();
@@ -121,5 +94,4 @@ public class PadAssignmentMenu extends ListActivity {
         setResult(RESULT_OK, returnIntent);
         super.finish();
     }
-    */
 }

@@ -37,6 +37,8 @@ import android.widget.GridLayout;
 import android.widget.Button;
 import android.view.ViewTreeObserver;
 
+import java.util.ArrayList;
+
 /**
  * Class that provides a platform to the grid, and its children (hit pads)
  * which happen to be buttons.
@@ -160,11 +162,14 @@ public class Container {
                 // Send button index to Main activity class
                 _currentActivity.setBtn_index(f_i);
                 Intent pa_intent = new Intent(_currentActivity.getApplicationContext(), PadAssignmentMenu.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("soundman", f_soundManager);
-                pa_intent.putExtras(bundle);
-                _currentActivity.startActivity(pa_intent);
-                //_currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
+                ArrayList<Sample> samples = f_soundManager.get_samples();
+                int sampleSize = samples.size();
+                ArrayList<String> sampleNames = new ArrayList<String>();
+                for (int i = 0; i < sampleSize; ++i)
+                    sampleNames.add(samples.get(i).get_resource_name());
+                pa_intent.putStringArrayListExtra("soundname", sampleNames);
+                //_currentActivity.startActivity(pa_intent);
+                _currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
                 return false;
             }
         });

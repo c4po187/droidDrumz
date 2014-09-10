@@ -27,8 +27,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.AudioManager;
-import android.widget.Button;
-import android.widget.Toast;
 
 /**
  * This is the main activity class. The application pretty much
@@ -144,16 +142,23 @@ public class DroidDrumzAlphaMain extends Activity {
      *                    completed activity. We can access any values
      *                    that were specified for this stage.
      */
-    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (data.hasExtra("returnKey")) {
                 String userChoiceStr = data.getExtras().getString("returnKey");
-                if (userChoiceStr != null)
-                    Toast.makeText(this, userChoiceStr, Toast.LENGTH_LONG).show();
+                if (userChoiceStr != null) {
+                    //Toast.makeText(this, userChoiceStr, Toast.LENGTH_LONG).show();
+                    int position = 0;
+                    for (int i = 0; i < _soundManager.get_samples().size(); ++i) {
+                        if (_soundManager.get_samples().get(i).get_resource_name() ==
+                                userChoiceStr) {
+                            position = i;
+                            break;
+                        }
+                    }
+                    _soundManager.setPresetSoundIndex(position, _btn_index);                }
             }
         }
     }
-    */
 }

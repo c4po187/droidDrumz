@@ -137,7 +137,9 @@ public class SoundManager extends SoundPool implements Serializable {
         if (index >= _presetSoundIDs.length)
             return false;
         else {
-            _presetSoundIDs[index] = _samples.get(index).get_resource_id();
+            //_presetSoundIDs[index] = _samples.get(index).get_resource_id();
+            _presetSoundIDs[index] = this.load(_currentActivity,
+                    _samples.get(soundId).get_resource_id(), 1);
             return true;
         }
     }
