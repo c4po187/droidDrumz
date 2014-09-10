@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.AudioManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 /**
@@ -74,7 +75,11 @@ public class DroidDrumzAlphaMain extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set this scene
         setContentView(R.layout.activity_droid_drumz_alpha_main);
+
+        // Init other classes
         _soundManager = new SoundManager(12, AudioManager.STREAM_MUSIC, 0, this);
         Container container = new Container(this, _soundManager);
         _menuManager = new MenuManager(this);
@@ -139,6 +144,7 @@ public class DroidDrumzAlphaMain extends Activity {
      *                    completed activity. We can access any values
      *                    that were specified for this stage.
      */
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
@@ -149,4 +155,5 @@ public class DroidDrumzAlphaMain extends Activity {
             }
         }
     }
+    */
 }

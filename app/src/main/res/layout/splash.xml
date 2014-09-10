@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/droid_drumz_splash" >
+
+    <!--
+         Button position will be set in percentages
+         programatically due to users having different
+         screen resolutions, using a set value in pixels
+         may be ok with one device, but not he next.
+    -->
+    <Button
+        android:id="@+id/splash_start_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_btn"
+        android:background="@drawable/btn_splash"
+        style="@style/splash_btn_font_style" />
+
+    <Button
+        android:id="@+id/splash_exit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_btn"
+        android:layout_toRightOf="@id/splash_start_btn"
+        android:layout_alignBaseline="@id/splash_start_btn"
+        android:background="@drawable/btn_splash"
+        style="@style/splash_btn_font_style" />
+
+</RelativeLayout>

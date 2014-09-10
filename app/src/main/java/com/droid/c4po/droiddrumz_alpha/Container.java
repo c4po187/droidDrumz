@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -88,35 +89,10 @@ public class Container {
      *                     Parameter that represents the SoundManager class.
      */
     public void reorganizeGrid(GridLayout gl, SoundManager soundManager) {
-        // Get Window Metrics and apply our layout based on what we retrieve.
-        WindowManager winManager = _currentActivity.getWindowManager();
-        Display display = winManager.getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
-        int widthPixels = 0, heightPixels = 0;
-
-        if (Build.VERSION.SDK_INT >= 1 && Build.VERSION.SDK_INT < 14) {
-            widthPixels = metrics.widthPixels;
-            heightPixels = metrics.heightPixels;
-        } else if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17) {
-            try {
-                widthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
-                heightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (Exception e) {
-                Log.e("Container: ", "Could not retrieve raw dimensions because, " +
-                    e.getMessage());
-            }
-        } else {
-            try {
-                Point realSize = new Point();
-                Display.class.getMethod("getRealSize", Point.class).invoke(display, realSize);
-                widthPixels = realSize.x;
-                heightPixels = realSize.y;
-            } catch (Exception e) {
-                Log.e("Container: ", "Could not retrieve real dimensions because, " +
-                    e.getMessage());
-            }
-        }
+        DimensionHelper dimHelper = new DimensionHelper(_currentActivity);
+        dimHelper.calculateScreenDimensions();
+        int widthPixels = dimHelper.getScreenWidth();
+        int heightPixels = dimHelper.getScreenHeight();
 
         // Resize the grid based on users device
         int five_percent_x = ((widthPixels / 100) * 5);
@@ -183,9 +159,12 @@ public class Container {
                 Log.d("Button ", Integer.toString(f_i) + ": busted long click, now make a menu!");
                 // Send button index to Main activity class
                 _currentActivity.setBtn_index(f_i);
-                Intent pa_intent = new Intent(_currentActivity, PadAssignmentMenu.class);
-                // We may want to use putExtra to send data across at a later date
-                _currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
+                Intent pa_intent = new Intent(_currentActivity.getApplicationContext(), PadAssignmentMenu.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("soundman", f_soundManager);
+                pa_intent.putExtras(bundle);
+                _currentActivity.startActivity(pa_intent);
+                //_currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
                 return false;
             }
         });
