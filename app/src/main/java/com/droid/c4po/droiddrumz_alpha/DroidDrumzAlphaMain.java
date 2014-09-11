@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.media.AudioManager;
 
+
 /**
  * This is the main activity class. The application pretty much
  * starts off from here. Many of the other classes in this project
@@ -48,10 +49,6 @@ public class DroidDrumzAlphaMain extends Activity {
     /*********************************************************************
      * Getters & Setters *************************************************
      *********************************************************************/
-
-    public int getBtn_index() {
-        return _btn_index;
-    }
 
     public void setBtn_index(int btn_index) {
         _btn_index = btn_index;
@@ -150,14 +147,14 @@ public class DroidDrumzAlphaMain extends Activity {
                 if (userChoiceStr != null) {
                     //Toast.makeText(this, userChoiceStr, Toast.LENGTH_LONG).show();
                     int position = 0;
-                    for (int i = 0; i < _soundManager.get_samples().size(); ++i) {
-                        if (_soundManager.get_samples().get(i).get_resource_name() ==
-                                userChoiceStr) {
-                            position = i;
+                    for (; position < _soundManager.get_samples().size(); ++position) {
+                        if (_soundManager.get_samples().get(position).get_resource_name()
+                                .equals(userChoiceStr)) {
                             break;
                         }
                     }
-                    _soundManager.setPresetSoundIndex(position, _btn_index);                }
+                    _soundManager.setPresetSoundIndex(position, _btn_index);
+                }
             }
         }
     }

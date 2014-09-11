@@ -22,17 +22,11 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.Button;
 import android.view.ViewTreeObserver;
@@ -168,7 +162,6 @@ public class Container {
                 for (int i = 0; i < sampleSize; ++i)
                     sampleNames.add(samples.get(i).get_resource_name());
                 pa_intent.putStringArrayListExtra("soundname", sampleNames);
-                //_currentActivity.startActivity(pa_intent);
                 _currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
                 return false;
             }

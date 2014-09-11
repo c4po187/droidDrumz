@@ -29,12 +29,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Class that displays the Sound Bank, and assigns a sound to
  * the pad that initiated this class.
- *
- * TODO: Create the Sound bank, and implement it into the menu instead of our test array of strings.
  */
 public class PadAssignmentMenu extends ListActivity {
 
@@ -58,9 +57,23 @@ public class PadAssignmentMenu extends ListActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        /* Grab the sound bank string array from the intent extra and pass
+           it to the array adapter
+          */
         _sound_bank = this.getIntent().getStringArrayListExtra("soundname");
         ArrayAdapter<String> pa_adapter = new ArrayAdapter<String>(
                 this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
+
+        // Sort the adapter alphabetically, ignoring case
+        pa_adapter.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s, String s2) {
+                return s2.compareToIgnoreCase(s);
+            }
+        });
+
+        // Finally, set the adapter and display it
         setListAdapter(pa_adapter);
     }
 

@@ -69,6 +69,8 @@ public class splash_screen extends Activity implements OnClickListener{
      *              Parameter represents the start button.
      * @param exit  :
      *              Parameter represents the exit button.
+     *
+     * TODO: Calculations need tweaking, layout slightly out on my device!
      */
     private void setButtonPositions(Button start, Button exit) {
         // Retrieve the screen dimensions
