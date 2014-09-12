@@ -29,12 +29,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableRow;
 
 /**
  * Small Class that simply handles the splash screen, and starts the main
  * program upon clicking the start button funnily enough.
  */
-public class splash_screen extends Activity implements OnClickListener{
+public class splash_screen extends Activity implements OnClickListener {
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -58,46 +59,25 @@ public class splash_screen extends Activity implements OnClickListener{
         Button exitBtn = (Button)findViewById(R.id.splash_exit_btn);
         exitBtn.setTypeface(btn_font);
         exitBtn.setOnClickListener(this);
-        setButtonPositions(startBtn, exitBtn);
+        setButtonVerticalPositions();
     }
 
     /**
      * This method sets up the button positions and dimensions
      * correctly based on the users device.
-     *
-     * @param start :
-     *              Parameter represents the start button.
-     * @param exit  :
-     *              Parameter represents the exit button.
-     *
-     * TODO: Calculations need tweaking, layout slightly out on my device!
      */
-    private void setButtonPositions(Button start, Button exit) {
+    private void setButtonVerticalPositions() {
         // Retrieve the screen dimensions
         DimensionHelper dimHelper = new DimensionHelper(this);
         dimHelper.calculateScreenDimensions();
-        int width = dimHelper.getScreenWidth();
         int height = dimHelper.getScreenHeight();
 
-        // Percentage Padders
-        int x1pc = (width / 100);               // 1%
-        int x3pc = ((width / 100) * 3);         // 3%
-        int xbtn_pad = ((width / 100) * 10);    // 10%
-        int ybtn_pad = ((height / 100) * 65);   // 65%
-
-        // Set Dimensions of buttons
-        int btn_width = ((width / 100) * 35);   // 35%
-        start.setWidth(btn_width);
-        start.setHeight(xbtn_pad);
-        exit.setWidth(btn_width);
-        exit.setHeight(xbtn_pad);
-
-        // Set Margins of buttons: ultimately, positioning them
-        ViewGroup.MarginLayoutParams start_margins =
-                (ViewGroup.MarginLayoutParams)start.getLayoutParams();
-        start_margins.leftMargin = xbtn_pad + x3pc;
-        start_margins.rightMargin = xbtn_pad + x1pc;
-        start_margins.topMargin = ybtn_pad;
+        // Position Button row vertically
+        int row_vert_pos = ((height / 100) * 65);   // 65%
+        TableRow btnRow = (TableRow)findViewById(R.id.splash_btn_row);
+        ViewGroup.MarginLayoutParams btnRowMargin =
+                (ViewGroup.MarginLayoutParams)btnRow.getLayoutParams();
+        btnRowMargin.topMargin = row_vert_pos;
     }
 
     /**

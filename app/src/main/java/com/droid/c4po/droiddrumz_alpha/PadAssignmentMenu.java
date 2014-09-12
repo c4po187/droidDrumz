@@ -22,14 +22,18 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-
+import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Class that displays the Sound Bank, and assigns a sound to
@@ -43,6 +47,77 @@ public class PadAssignmentMenu extends ListActivity {
 
     ArrayList<String> _sound_bank;
     private String _chosenItem;
+
+    /*********************************************************************
+     * Internal Private Class ********************************************
+     *********************************************************************/
+
+    /**
+     * Class that extends from ArrayAdapter to help further customize
+     * row items in the ListView.
+     *
+     * @param <T> :
+     *            Parameter represents any type.
+     */
+    private class PadAssignAdapter<T> extends ArrayAdapter<T> {
+
+        /*****************************************************************
+         * Constructor ***************************************************
+         *****************************************************************/
+
+        public PadAssignAdapter(Context context, int resrc, int textView_resrc,
+                                List<T> objects) {
+            super(context, resrc, textView_resrc, objects);
+        }
+
+        /*****************************************************************
+         * Methods *******************************************************
+         *****************************************************************/
+
+        /**
+         * Method grabs the view of the Array Adapter.
+         *
+         * @param position      :
+         *                      Parameter represents the current position
+         *                      in the list.
+         * @param convertView   :
+         *                      Parameter represents the view of the Array
+         *                      Adapter.
+         * @param parent        :
+         *                      Parameter represents the parent of the
+         *                      Array Adapter.
+         * @return              :
+         *                      Returns a view.
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View itemView = super.getView(position, convertView, parent);
+            ImageView img = (ImageView)itemView.findViewById(R.id.pa_icon);
+            TextView text = (TextView)itemView.findViewById(R.id.pa_text);
+
+            /* Check row text for specified sub strings and set
+               row images accordingly
+             */
+            if (text.getText().toString().contains("snare")) {
+                img.setImageResource(R.drawable.wsnare48);
+            } else if (text.getText().toString().contains("kick")) {
+                img.setImageResource(R.drawable.wdrum648);
+            } else if (text.getText().toString().contains("tom")) {
+                img.setImageResource(R.drawable.tom48);
+            } else if (text.getText().toString().contains("cymbal") ||
+                    text.getText().toString().contains("hat") ||
+                    text.getText().toString().contains("closed") ||
+                    text.getText().toString().contains("open") ||
+                    text.getText().toString().contains("crash") ||
+                    text.getText().toString().contains("ride")) {
+                img.setImageResource(R.drawable.wcymbals48);
+            } else {
+                img.setImageResource(R.drawable.wperc48);
+            }
+
+            return itemView;
+        }
+    }
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -62,7 +137,7 @@ public class PadAssignmentMenu extends ListActivity {
            it to the array adapter
           */
         _sound_bank = this.getIntent().getStringArrayListExtra("soundname");
-        ArrayAdapter<String> pa_adapter = new ArrayAdapter<String>(
+        PadAssignAdapter<String> pa_adapter = new PadAssignAdapter<String>(
                 this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
 
         // Sort the adapter alphabetically, ignoring case

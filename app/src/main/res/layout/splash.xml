@@ -20,33 +20,42 @@
     c4po187@gmail.com
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_columnSpan="3"
+    android:stretchColumns="2"
     android:background="@drawable/droid_drumz_splash" >
 
     <!--
-         Button position will be set in percentages
-         programatically due to users having different
-         screen resolutions, using a set value in pixels
-         may be ok with one device, but not he next.
+        Row Vertical Position will be set
+        programatically at 65%
     -->
-    <Button
-        android:id="@+id/splash_start_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_btn"
-        android:background="@drawable/btn_splash"
-        style="@style/splash_btn_font_style" />
+    <TableRow
+        android:id="@+id/splash_btn_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"  >
 
-    <Button
-        android:id="@+id/splash_exit_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/exit_btn"
-        android:layout_toRightOf="@id/splash_start_btn"
-        android:layout_alignBaseline="@id/splash_start_btn"
-        android:background="@drawable/btn_splash"
-        style="@style/splash_btn_font_style" />
+        <Button
+            android:id="@+id/splash_start_btn"
+            android:layout_column="1"
+            android:layout_width="@dimen/splash_btn_width"
+            android:layout_height="@dimen/splash_btn_height"
+            android:layout_marginLeft="@dimen/splash_btn_margin"
+            android:text="@string/start_btn"
+            android:background="@drawable/btn_splash"
+            style="@style/splash_btn_font_style" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/splash_exit_btn"
+            android:layout_column="3"
+            android:layout_width="@dimen/splash_btn_width"
+            android:layout_height="@dimen/splash_btn_height"
+            android:layout_marginRight="@dimen/splash_btn_margin"
+            android:text="@string/exit_btn"
+            android:background="@drawable/btn_splash"
+            style="@style/splash_btn_font_style" />
+
+    </TableRow>
+
+</TableLayout>

@@ -23,7 +23,7 @@
 <resources>
 
     <!-- Application Name -->
-    <string name="app_name">DroidDrumz-Alpha</string>
+    <string name="app_name">DroidDrumz-Beta</string>
 
     <!-- General Debug String -->
     <string name="DBG_STR">Hello, DroidDrumz!</string>

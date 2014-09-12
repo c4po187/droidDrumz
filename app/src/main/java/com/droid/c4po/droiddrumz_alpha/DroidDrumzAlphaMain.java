@@ -145,7 +145,6 @@ public class DroidDrumzAlphaMain extends Activity {
             if (data.hasExtra("returnKey")) {
                 String userChoiceStr = data.getExtras().getString("returnKey");
                 if (userChoiceStr != null) {
-                    //Toast.makeText(this, userChoiceStr, Toast.LENGTH_LONG).show();
                     int position = 0;
                     for (; position < _soundManager.get_samples().size(); ++position) {
                         if (_soundManager.get_samples().get(position).get_resource_name()

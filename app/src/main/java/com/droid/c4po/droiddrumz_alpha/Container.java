@@ -152,7 +152,6 @@ public class Container {
         btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Log.d("Button ", Integer.toString(f_i) + ": busted long click, now make a menu!");
                 // Send button index to Main activity class
                 _currentActivity.setBtn_index(f_i);
                 Intent pa_intent = new Intent(_currentActivity.getApplicationContext(), PadAssignmentMenu.class);
