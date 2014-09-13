@@ -36,6 +36,8 @@
     <string name="_action_themes">Themes</string>
     <string name="tok">OK</string>
     <string name="tc">Cancel</string>
+    <!-- Action Menu (Pitch) -->
+    <string name="_action_pitch">Pitch</string>
 
     <!-- Splash Screen -->
     <string name="start_btn">start</string>

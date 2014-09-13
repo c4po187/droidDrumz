@@ -120,6 +120,10 @@ public class DroidDrumzAlphaMain extends Activity {
             _menuManager.actionBar_AboutSelected();
         if (id == R.id.action_themes)
             _menuManager.themesClicked();
+        if (id == R.id.action_pitch) {
+            _menuManager.pitchClicked(_soundManager);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

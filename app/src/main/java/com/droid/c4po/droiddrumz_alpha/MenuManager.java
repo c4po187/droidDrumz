@@ -23,12 +23,18 @@ package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 /**
  * Class that manages all Menu interactions
@@ -52,6 +58,10 @@ public class MenuManager {
     private Activity _currentActivity;
     private THEME_CHOICE _theme_choice;
     private int _theme_current_index;
+    private int _previous_theme_index;
+    private int _pitch_current_index;
+    private int _previous_pitch_index;
+    public float _pitch;
 
     /**
      * Constructor
@@ -62,7 +72,9 @@ public class MenuManager {
     public MenuManager(Activity currentActivity) {
         _currentActivity = currentActivity;
         _theme_choice = THEME_CHOICE.DEFAULT;
-        _theme_current_index = 0;
+        _theme_current_index = _previous_theme_index = 0;
+        _pitch_current_index = _previous_pitch_index = 1;
+        _pitch = 1.0f;
     }
 
     /*********************************************************************
@@ -83,6 +95,49 @@ public class MenuManager {
         });
         AlertDialog about_dialog = about_builder.create();
         about_dialog.show();
+    }
+
+    /**
+     * Method that creates the Pitch Dialog, it also captures the users choice.
+     */
+    public void pitchClicked(final SoundManager soundManager) {
+        _previous_pitch_index = _pitch_current_index;
+        String[] pitchValues = { "Half Speed", "Normal Speed", "Double Speed" };
+        final AlertDialog.Builder pitch_builder = new AlertDialog.Builder(_currentActivity);
+        pitch_builder.setTitle("Change Pitch");
+        pitch_builder.setSingleChoiceItems(pitchValues, _pitch_current_index,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        _pitch_current_index = which;
+                        switch (which) {
+                            case 0:
+                                _pitch = 0.5f;
+                                break;
+                            case 1:
+                                _pitch = 1.0f;
+                                break;
+                            case 2:
+                                _pitch = 2.0f;
+                                break;
+                        }
+                    }
+                }).setPositiveButton(R.string.tok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        soundManager.set_pitch(_pitch);
+                        dialogInterface.dismiss();
+                    }
+                }).setNegativeButton(R.string.tc, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        _pitch_current_index = _previous_pitch_index;
+                        dialogInterface.cancel();
+                    }
+                });
+
+        AlertDialog pitch_dialog = pitch_builder.create();
+        pitch_dialog.show();
     }
 
     /**
@@ -149,7 +204,7 @@ public class MenuManager {
      * users choice.
      */
     public void themesClicked() {
-        final int previous_theme_index = _theme_current_index;
+        _previous_theme_index = _theme_current_index;
         String[] theme_list = { "Default", "Girly", "Punk", "Blobby" };
         final AlertDialog.Builder themes_builder = new AlertDialog.Builder(_currentActivity);
         themes_builder.setTitle(R.string._action_themes);
@@ -183,7 +238,7 @@ public class MenuManager {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
-                _theme_current_index = previous_theme_index;
+                _theme_current_index = _previous_theme_index;
             }
         });
         AlertDialog theme_dialog = themes_builder.create();

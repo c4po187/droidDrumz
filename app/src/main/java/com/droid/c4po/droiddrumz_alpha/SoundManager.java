@@ -41,6 +41,7 @@ public class SoundManager extends SoundPool implements Serializable {
      *********************************************************************/
     
     private float _volume;
+    private float _pitch;
     private int _presetSoundIDs[];
     private ArrayList<Sample> _samples;
     private static int _SOUND_BANK_START_INDEX_ = 0x7f040000;
@@ -56,6 +57,8 @@ public class SoundManager extends SoundPool implements Serializable {
     public ArrayList<Sample> get_samples() {
         return _samples;
     }
+
+    public void set_pitch(float pitch) { _pitch = pitch; }
 
     /**
      *
@@ -78,6 +81,7 @@ public class SoundManager extends SoundPool implements Serializable {
                         Activity currentActivity) {
         super(maxStreams, streamType, srcQuality);
         _currentActivity = currentActivity;
+        _pitch = 1.0f;
         init();
     }
 
@@ -147,6 +151,6 @@ public class SoundManager extends SoundPool implements Serializable {
      *                Index of sound in sound bank(_presetSoundIDs).
      */
     public void playSound(int soundID) {
-        _streamID = this.play(_presetSoundIDs[soundID], _volume, _volume, 1, 0, 1.0f);
+        _streamID = this.play(_presetSoundIDs[soundID], _volume, _volume, 1, 0, _pitch);
     }
 }

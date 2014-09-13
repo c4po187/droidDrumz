@@ -20,24 +20,27 @@
     c4po187@gmail.com
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".DroidDrumzAlphaMain" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pitch_seeker_dialog" >
 
-    <item android:id="@+id/action_about"
-        android:title="@string/_action_about"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+    <TextView
+        android:id="@+id/pitch_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="Current Pitch: "
+        android:textSize="26sp" />
+    
+    <SeekBar
+        android:id="@+id/seeker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/pitch_txt"
+        android:layout_marginTop="15dp" />
 
-    <item android:id="@+id/action_pitch"
-        android:title="@string/_action_pitch"
-        android:orderInCategory="200"
-        android:showAsAction="never" />
-
-    <item android:id="@+id/action_themes"
-        android:title="@string/_action_themes"
-        android:orderInCategory="300"
-        android:showAsAction="never" />
-
-
-</menu>
+</RelativeLayout>
