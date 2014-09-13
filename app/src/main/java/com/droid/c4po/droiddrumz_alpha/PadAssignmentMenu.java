@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -137,16 +138,17 @@ public class PadAssignmentMenu extends ListActivity {
            it to the array adapter
           */
         _sound_bank = this.getIntent().getStringArrayListExtra("soundname");
-        PadAssignAdapter<String> pa_adapter = new PadAssignAdapter<String>(
-                this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
 
-        // Sort the adapter alphabetically, ignoring case
-        pa_adapter.sort(new Comparator<String>() {
+        // Sort the list alphabetically
+        Collections.sort(_sound_bank, new Comparator<String>() {
             @Override
             public int compare(String s, String s2) {
-                return s2.compareToIgnoreCase(s);
+                return s.compareToIgnoreCase(s2);
             }
         });
+
+        PadAssignAdapter<String> pa_adapter = new PadAssignAdapter<String>(
+                this, R.layout.pad_assign_menu_row, R.id.pa_text, _sound_bank);
 
         // Finally, set the adapter and display it
         setListAdapter(pa_adapter);
