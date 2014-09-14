@@ -25,7 +25,6 @@ import android.content.Context;
 import android.media.SoundPool;
 import android.media.AudioManager;
 import android.app.Activity;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -34,20 +33,20 @@ import java.util.ArrayList;
  * Class implements Serializable so it can be passed
  * as an object instance via Intents.
  */
-public class SoundManager extends SoundPool implements Serializable {
+public class SoundManager extends SoundPool {
 
     /*********************************************************************
      * Members ***********************************************************
      *********************************************************************/
-    
+
     private float _volume;
+    private int _loop;
     private float _pitch;
     private int _presetSoundIDs[];
     private ArrayList<Sample> _samples;
     private static int _SOUND_BANK_START_INDEX_ = 0x7f040000;
     private static int _SOUND_BANK_END_INDEX_ = 0x7f040155;
     private Activity _currentActivity;
-    // We'll use this to do something interesting later...
     private int _streamID;
 
     /*********************************************************************
@@ -81,8 +80,8 @@ public class SoundManager extends SoundPool implements Serializable {
                         Activity currentActivity) {
         super(maxStreams, streamType, srcQuality);
         _currentActivity = currentActivity;
+        _loop = 0;
         _pitch = 1.0f;
-        init();
     }
 
     /*********************************************************************
@@ -92,7 +91,7 @@ public class SoundManager extends SoundPool implements Serializable {
     /**
      * Initialise all objects and data within this class.
      */
-    private void init() {
+    public void init() {
         // Set up AudioManager
         AudioManager audioManager = (AudioManager) _currentActivity.getSystemService(
                 Context.AUDIO_SERVICE);
@@ -103,24 +102,26 @@ public class SoundManager extends SoundPool implements Serializable {
         // Set up Samples
         _samples = new ArrayList<Sample>();
 
-        for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index)
-            _samples.add(new Sample(_currentActivity, index));
+        for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index) {
+            if (index != 0x7f0400d9)
+                _samples.add(new Sample(_currentActivity, index));
+        }
 
         // Set up preset sounds
         _presetSoundIDs = new int[12];
 
-        _presetSoundIDs[0] = this.load(_currentActivity, 0x7f0400ea, 1);
-        _presetSoundIDs[1] = this.load(_currentActivity, 0x7f040102, 1);
-        _presetSoundIDs[2] = this.load(_currentActivity, 0x7f0400d9, 1);
-        _presetSoundIDs[3] = this.load(_currentActivity, 0x7f0400e2, 1);
-        _presetSoundIDs[4] = this.load(_currentActivity, 0x7f0400e7, 1);
-        _presetSoundIDs[5] = this.load(_currentActivity, 0x7f040100, 1);
-        _presetSoundIDs[6] = this.load(_currentActivity, 0x7f0400db, 1);
-        _presetSoundIDs[7] = this.load(_currentActivity, 0x7f0400e1, 1);
-        _presetSoundIDs[8] = this.load(_currentActivity, 0x7f0400e0, 1);
-        _presetSoundIDs[9] = this.load(_currentActivity, 0x7f040114, 1);
-        _presetSoundIDs[10] = this.load(_currentActivity, 0x7f040115, 1);
-        _presetSoundIDs[11] = this.load(_currentActivity, 0x7f0400fd, 1);
+        _presetSoundIDs[0] = this.load(_currentActivity, 0x7f0400eb, 1);
+        _presetSoundIDs[1] = this.load(_currentActivity, 0x7f040103, 1);
+        _presetSoundIDs[2] = this.load(_currentActivity, 0x7f0400da, 1);
+        _presetSoundIDs[3] = this.load(_currentActivity, 0x7f0400e3, 1);
+        _presetSoundIDs[4] = this.load(_currentActivity, 0x7f0400e8, 1);
+        _presetSoundIDs[5] = this.load(_currentActivity, 0x7f040101, 1);
+        _presetSoundIDs[6] = this.load(_currentActivity, 0x7f0400dc, 1);
+        _presetSoundIDs[7] = this.load(_currentActivity, 0x7f0400e2, 1);
+        _presetSoundIDs[8] = this.load(_currentActivity, 0x7f0400fe, 1);
+        _presetSoundIDs[9] = this.load(_currentActivity, 0x7f0400dd, 1);
+        _presetSoundIDs[10] = this.load(_currentActivity, 0x7f0400de, 1);
+        _presetSoundIDs[11] = this.load(_currentActivity, 0x7f0400df, 1);
     }
 
     /**
@@ -131,7 +132,9 @@ public class SoundManager extends SoundPool implements Serializable {
      *                Parameter represents the soundId from the sound bank.
      * @param index   :
      *                Parameter represents the position in the array to set.
-     * @return
+     * @return        :
+     *                Returns true upon loading a sound to the presets,
+     *                false if the index is out of bounds.
      */
     public boolean setPresetSoundIndex(int soundId, int index) {
         if (index >= _presetSoundIDs.length || index < 0)
@@ -151,6 +154,6 @@ public class SoundManager extends SoundPool implements Serializable {
      *                Index of sound in sound bank(_presetSoundIDs).
      */
     public void playSound(int soundID) {
-        _streamID = this.play(_presetSoundIDs[soundID], _volume, _volume, 1, 0, _pitch);
+        _streamID = this.play(_presetSoundIDs[soundID], _volume, _volume, 1, _loop, _pitch);
     }
 }

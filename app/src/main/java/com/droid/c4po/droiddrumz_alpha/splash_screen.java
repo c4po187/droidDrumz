@@ -24,6 +24,7 @@ package com.droid.c4po.droiddrumz_alpha;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +37,12 @@ import android.widget.TableRow;
  * program upon clicking the start button funnily enough.
  */
 public class splash_screen extends Activity implements OnClickListener {
+
+    /*********************************************************************
+     * Members ***********************************************************
+     *********************************************************************/
+
+    MediaPlayer _splashPlayer;
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -60,6 +67,13 @@ public class splash_screen extends Activity implements OnClickListener {
         exitBtn.setTypeface(btn_font);
         exitBtn.setOnClickListener(this);
         setButtonVerticalPositions();
+
+        // Play our intro tune
+        _splashPlayer = MediaPlayer.create(this, R.raw.splashloop);
+        _splashPlayer.setLooping(true);
+        _splashPlayer.setVolume(0.35f, 0.35f);
+        _splashPlayer.start();
+
     }
 
     /**
@@ -90,6 +104,8 @@ public class splash_screen extends Activity implements OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.splash_start_btn) {
+            _splashPlayer.stop();
+            _splashPlayer.release();
             Intent runMain = new Intent(this, DroidDrumzAlphaMain.class);
             this.startActivity(runMain);
         } else if (view.getId() == R.id.splash_exit_btn) {

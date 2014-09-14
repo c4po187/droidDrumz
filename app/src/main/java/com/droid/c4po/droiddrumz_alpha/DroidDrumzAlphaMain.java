@@ -76,6 +76,7 @@ public class DroidDrumzAlphaMain extends Activity {
 
         // Init other classes
         _soundManager = new SoundManager(12, AudioManager.STREAM_MUSIC, 0, this);
+        _soundManager.init();
         Container container = new Container(this, _soundManager);
         _menuManager = new MenuManager(this);
     }
