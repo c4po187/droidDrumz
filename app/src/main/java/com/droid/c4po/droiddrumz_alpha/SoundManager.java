@@ -104,7 +104,7 @@ public class SoundManager extends SoundPool {
 
         for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index) {
             // We don't want the splash loop in there
-            if (index != 0x7f0400d9)
+            if (index != 0x7f0400da)
                 _samples.add(new Sample(_currentActivity, index));
         }
 
