@@ -35,6 +35,8 @@ import android.widget.TableRow;
 /**
  * Small Class that simply handles the splash screen, and starts the main
  * program upon clicking the start button funnily enough.
+ *
+ * TODO: Fix up the SplashPlayer loop, the loop quality is dire!
  */
 public class splash_screen extends Activity implements OnClickListener {
 

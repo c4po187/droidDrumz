@@ -48,7 +48,7 @@ public class MenuManager {
      *********************************************************************/
 
     public enum THEME_CHOICE {
-        DEFAULT, GIRLY, PUNK, BLOBBY
+        DEFAULT, GIRLY, PUNK, BLOBBY, HORROR
     }
 
     /*********************************************************************
@@ -174,6 +174,10 @@ public class MenuManager {
                         .getDrawable(R.drawable.blobby));
                 btn_font = CustomFontHelper.get(_currentActivity, "Stab.ttf");
                 break;
+            case HORROR:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.lothorror));
+                btn_font = CustomFontHelper.get(_currentActivity, "urban decay.ttf");
         }
 
         Button btn;
@@ -192,6 +196,9 @@ public class MenuManager {
             } else if (_theme_choice == THEME_CHOICE.PUNK) {
                 btn.setBackground(_currentActivity.getResources()
                         .getDrawable(R.drawable.btn_snotty));
+            } else if (_theme_choice == THEME_CHOICE.HORROR) {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_horror));
             } else {
                 btn.setBackground(_currentActivity.getResources()
                         .getDrawable(R.drawable.btn_blobz));
@@ -205,7 +212,7 @@ public class MenuManager {
      */
     public void themesClicked() {
         _previous_theme_index = _theme_current_index;
-        String[] theme_list = { "Default", "Girly", "Punk", "Blobby" };
+        String[] theme_list = { "Default", "Girly", "Punk", "Blobby", "Horror" };
         final AlertDialog.Builder themes_builder = new AlertDialog.Builder(_currentActivity);
         themes_builder.setTitle(R.string._action_themes);
         themes_builder.setSingleChoiceItems(theme_list, _theme_current_index,
@@ -225,6 +232,9 @@ public class MenuManager {
                         break;
                     case 3:
                         _theme_choice = THEME_CHOICE.BLOBBY;
+                        break;
+                    case 4:
+                        _theme_choice = THEME_CHOICE.HORROR;
                         break;
                 }
             }
