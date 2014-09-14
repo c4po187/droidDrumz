@@ -23,18 +23,12 @@ package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 /**
  * Class that manages all Menu interactions
@@ -48,7 +42,7 @@ public class MenuManager {
      *********************************************************************/
 
     public enum THEME_CHOICE {
-        DEFAULT, GIRLY, PUNK, BLOBBY, HORROR
+        DEFAULT, GIRLY, PUNK, BLOBBY, HORROR, TECHNOLOGY
     }
 
     /*********************************************************************
@@ -178,6 +172,12 @@ public class MenuManager {
                 rl.setBackground(_currentActivity.getResources()
                         .getDrawable(R.drawable.lothorror));
                 btn_font = CustomFontHelper.get(_currentActivity, "urban decay.ttf");
+                break;
+            case TECHNOLOGY:
+                rl.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.tech));
+                btn_font = CustomFontHelper.get(_currentActivity, "Wipeout HD Fury.ttf");
+                break;
         }
 
         Button btn;
@@ -199,9 +199,12 @@ public class MenuManager {
             } else if (_theme_choice == THEME_CHOICE.HORROR) {
                 btn.setBackground(_currentActivity.getResources()
                         .getDrawable(R.drawable.btn_horror));
-            } else {
+            } else if (_theme_choice == THEME_CHOICE.BLOBBY) {
                 btn.setBackground(_currentActivity.getResources()
                         .getDrawable(R.drawable.btn_blobz));
+            } else {
+                btn.setBackground(_currentActivity.getResources()
+                        .getDrawable(R.drawable.btn_tech));
             }
         }
     }
@@ -212,7 +215,7 @@ public class MenuManager {
      */
     public void themesClicked() {
         _previous_theme_index = _theme_current_index;
-        String[] theme_list = { "Default", "Girly", "Punk", "Blobby", "Horror" };
+        String[] theme_list = { "Default", "Girly", "Punk", "Blobby", "Horror", "Technology" };
         final AlertDialog.Builder themes_builder = new AlertDialog.Builder(_currentActivity);
         themes_builder.setTitle(R.string._action_themes);
         themes_builder.setSingleChoiceItems(theme_list, _theme_current_index,
@@ -235,6 +238,9 @@ public class MenuManager {
                         break;
                     case 4:
                         _theme_choice = THEME_CHOICE.HORROR;
+                        break;
+                    case 5:
+                        _theme_choice = THEME_CHOICE.TECHNOLOGY;
                         break;
                 }
             }

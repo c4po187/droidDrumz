@@ -44,7 +44,7 @@ public class splash_screen extends Activity implements OnClickListener {
      * Members ***********************************************************
      *********************************************************************/
 
-    MediaPlayer _splashPlayer;
+    private MediaPlayer _splashPlayer_looper, _needle_scratch;
 
     /*********************************************************************
      * Methods ***********************************************************
@@ -70,11 +70,16 @@ public class splash_screen extends Activity implements OnClickListener {
         exitBtn.setOnClickListener(this);
         setButtonVerticalPositions();
 
+        // Get needle scratch ready
+        _needle_scratch = MediaPlayer.create(this, R.raw.needlescratch);
+        _needle_scratch.setLooping(false);
+        _needle_scratch.setVolume(0.5f, 0.5f);
+
         // Play our intro tune
-        _splashPlayer = MediaPlayer.create(this, R.raw.splashloop);
-        _splashPlayer.setLooping(true);
-        _splashPlayer.setVolume(0.35f, 0.35f);
-        _splashPlayer.start();
+        _splashPlayer_looper = MediaPlayer.create(this, R.raw.splashloop);
+        _splashPlayer_looper.setLooping(true);
+        _splashPlayer_looper.setVolume(0.35f, 0.35f);
+        _splashPlayer_looper.start();
 
     }
 
@@ -105,13 +110,40 @@ public class splash_screen extends Activity implements OnClickListener {
      */
     @Override
     public void onClick(View view) {
+        // Start button clicked
         if (view.getId() == R.id.splash_start_btn) {
-            _splashPlayer.stop();
-            _splashPlayer.release();
+            // Stop and release the resources for our Splash Player instance
+            _splashPlayer_looper.stop();
+            _splashPlayer_looper.release();
+
+            /* Setup an on Completion listener for the needle scratch so we
+             * can release the resource, as we have finished with it.
+             */
+            _needle_scratch.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer needle_scratch) {
+                    needle_scratch.release();
+                }
+            });
+            _needle_scratch.start();
+
+            // Initialise an intent in order to start the main activity
             Intent runMain = new Intent(this, DroidDrumzAlphaMain.class);
             this.startActivity(runMain);
-        } else if (view.getId() == R.id.splash_exit_btn) {
+        }
+        // Exit button clicked
+        else if (view.getId() == R.id.splash_exit_btn) {
+            _splashPlayer_looper.stop();
             finish();
         }
+    }
+
+    /**
+     * Method that handles clicking of the back button
+     */
+    @Override
+    public void onBackPressed() {
+        _splashPlayer_looper.stop();
+        finish();
     }
 }

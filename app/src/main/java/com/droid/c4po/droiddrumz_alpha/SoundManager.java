@@ -45,7 +45,7 @@ public class SoundManager extends SoundPool {
     private int _presetSoundIDs[];
     private ArrayList<Sample> _samples;
     private static int _SOUND_BANK_START_INDEX_ = 0x7f040000;
-    private static int _SOUND_BANK_END_INDEX_ = 0x7f040155;
+    private static int _SOUND_BANK_END_INDEX_ = 0x7f040157;
     private Activity _currentActivity;
     private int _streamID;
 
@@ -103,6 +103,7 @@ public class SoundManager extends SoundPool {
         _samples = new ArrayList<Sample>();
 
         for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index) {
+            // We don't want the splash loop in there
             if (index != 0x7f0400d9)
                 _samples.add(new Sample(_currentActivity, index));
         }
@@ -110,18 +111,18 @@ public class SoundManager extends SoundPool {
         // Set up preset sounds
         _presetSoundIDs = new int[12];
 
-        _presetSoundIDs[0] = this.load(_currentActivity, 0x7f0400eb, 1);
-        _presetSoundIDs[1] = this.load(_currentActivity, 0x7f040103, 1);
-        _presetSoundIDs[2] = this.load(_currentActivity, 0x7f0400da, 1);
-        _presetSoundIDs[3] = this.load(_currentActivity, 0x7f0400e3, 1);
-        _presetSoundIDs[4] = this.load(_currentActivity, 0x7f0400e8, 1);
-        _presetSoundIDs[5] = this.load(_currentActivity, 0x7f040101, 1);
-        _presetSoundIDs[6] = this.load(_currentActivity, 0x7f0400dc, 1);
-        _presetSoundIDs[7] = this.load(_currentActivity, 0x7f0400e2, 1);
-        _presetSoundIDs[8] = this.load(_currentActivity, 0x7f0400fe, 1);
-        _presetSoundIDs[9] = this.load(_currentActivity, 0x7f0400dd, 1);
-        _presetSoundIDs[10] = this.load(_currentActivity, 0x7f0400de, 1);
-        _presetSoundIDs[11] = this.load(_currentActivity, 0x7f0400df, 1);
+        _presetSoundIDs[0] = this.load(_currentActivity, R.raw.tr808kick01, 1);
+        _presetSoundIDs[1] = this.load(_currentActivity, R.raw.tr808snare01, 1);
+        _presetSoundIDs[2] = this.load(_currentActivity, R.raw.tr808clap01, 1);
+        _presetSoundIDs[3] = this.load(_currentActivity, R.raw.tr808hatc01, 1);
+        _presetSoundIDs[4] = this.load(_currentActivity, R.raw.tr808hato01, 1);
+        _presetSoundIDs[5] = this.load(_currentActivity, R.raw.tr808shaker01, 1);
+        _presetSoundIDs[6] = this.load(_currentActivity, R.raw.tr808clave, 1);
+        _presetSoundIDs[7] = this.load(_currentActivity, R.raw.tr808cow, 1);
+        _presetSoundIDs[8] = this.load(_currentActivity, R.raw.tr808ride04, 1);
+        _presetSoundIDs[9] = this.load(_currentActivity, R.raw.tr808conga01, 1);
+        _presetSoundIDs[10] = this.load(_currentActivity, R.raw.tr808conga02, 1);
+        _presetSoundIDs[11] = this.load(_currentActivity, R.raw.tr808conga03, 1);
     }
 
     /**
