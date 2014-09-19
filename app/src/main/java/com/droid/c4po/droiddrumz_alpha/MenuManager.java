@@ -24,6 +24,7 @@ package com.droid.c4po.droiddrumz_alpha;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.widget.Button;
@@ -45,17 +46,22 @@ public class MenuManager {
         DEFAULT, GIRLY, PUNK, BLOBBY, HORROR, TECHNOLOGY
     }
 
+    public enum PRESET_MENU_CHOICE {
+        LOAD_PRESET, SAVE_PRESET
+    }
+
     /*********************************************************************
      * Members ***********************************************************
      *********************************************************************/
 
-    private Activity _currentActivity;
-    private THEME_CHOICE _theme_choice;
-    private int _theme_current_index;
-    private int _previous_theme_index;
-    private int _pitch_current_index;
-    private int _previous_pitch_index;
-    public float _pitch;
+    private Activity            _currentActivity;
+    private THEME_CHOICE        _theme_choice;
+    private PRESET_MENU_CHOICE  _preset_menu_choice;
+    public float                _pitch;
+    private int                 _theme_current_index,
+                                _previous_theme_index,
+                                _pitch_current_index,
+                                _previous_pitch_index;
 
     /**
      * Constructor
@@ -66,6 +72,7 @@ public class MenuManager {
     public MenuManager(Activity currentActivity) {
         _currentActivity = currentActivity;
         _theme_choice = THEME_CHOICE.DEFAULT;
+        _preset_menu_choice = PRESET_MENU_CHOICE.LOAD_PRESET;
         _theme_current_index = _previous_theme_index = 0;
         _pitch_current_index = _previous_pitch_index = 1;
         _pitch = 1.0f;
@@ -132,6 +139,54 @@ public class MenuManager {
 
         AlertDialog pitch_dialog = pitch_builder.create();
         pitch_dialog.show();
+    }
+
+    /**
+     * Method to handle the clicking of the Presets option
+     */
+    public void presetsClicked(final SoundManager soundManager) {
+        String[] presets_options = { "Load Preset", "Save Preset" };
+        final AlertDialog.Builder preset_dialog = new AlertDialog.Builder(_currentActivity);
+        preset_dialog.setTitle("Preset Menu");
+        preset_dialog.setSingleChoiceItems(presets_options, 0,
+            new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                switch (which) {
+                    case 0:
+                        _preset_menu_choice = PRESET_MENU_CHOICE.LOAD_PRESET;
+                        break;
+                    case 1:
+                        _preset_menu_choice = PRESET_MENU_CHOICE.SAVE_PRESET;
+                        break;
+                }
+            }
+        }).setPositiveButton(R.string.tok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (_preset_menu_choice == PRESET_MENU_CHOICE.LOAD_PRESET) {
+                    Intent load_preset_intent = new Intent(_currentActivity
+                            .getApplicationContext(), AssignmentMenu.class);
+                    load_preset_intent.putExtra("currentkit",
+                            soundManager.get_current_kit_assigned());
+                    load_preset_intent.putStringArrayListExtra("presetnames",
+                            SoundManager._PRESET_NAMES_);
+                    _currentActivity.startActivityForResult(load_preset_intent,
+                            DroidDrumzAlphaMain._PRESET_SOUND_CODE_);
+                } else {
+                    /* TODO: Drop the save dialog here */
+
+                }
+            }
+        }).setNegativeButton(R.string.tc, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        AlertDialog dialog = preset_dialog.create();
+        dialog.show();
     }
 
     /**

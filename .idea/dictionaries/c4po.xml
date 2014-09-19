@@ -2,15 +2,23 @@
   <dictionary name="c4po">
     <words>
       <w>blobby</w>
+      <w>chiptune</w>
+      <w>currentkit</w>
+      <w>currentsound</w>
       <w>descr</w>
       <w>drumz</w>
+      <w>electro</w>
       <w>ghang</w>
       <w>girly</w>
+      <w>guiro</w>
       <w>hexagrid</w>
       <w>looper</w>
       <w>padders</w>
+      <w>presetnames</w>
       <w>programatically</w>
       <w>resrc</w>
+      <w>returnpresetnames</w>
+      <w>returnsoundbank</w>
       <w>soundman</w>
       <w>styler</w>
       <w>vals</w>

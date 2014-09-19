@@ -34,5 +34,6 @@
     <dimen name="pa_menu_icon_top_margin">5dp</dimen>
     <dimen name="pa_menu_icon_left_margin">5dp</dimen>
     <dimen name="pa_menu_icon_right_margin">12.5dp</dimen>
+    <dimen name="pa_menu_current_text_split">7.5dp</dimen>
 
 </resources>

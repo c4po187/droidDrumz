@@ -122,6 +122,7 @@ public class splash_screen extends Activity implements OnClickListener {
             _needle_scratch.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer needle_scratch) {
+                    needle_scratch.stop();
                     needle_scratch.release();
                 }
             });
@@ -133,17 +134,10 @@ public class splash_screen extends Activity implements OnClickListener {
         }
         // Exit button clicked
         else if (view.getId() == R.id.splash_exit_btn) {
-            _splashPlayer_looper.stop();
+            if (_splashPlayer_looper != null)
+                _splashPlayer_looper.stop();
             finish();
+            //System.exit(0);
         }
-    }
-
-    /**
-     * Method that handles clicking of the back button
-     */
-    @Override
-    public void onBackPressed() {
-        _splashPlayer_looper.stop();
-        finish();
     }
 }

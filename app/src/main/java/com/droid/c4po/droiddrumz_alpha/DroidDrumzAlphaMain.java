@@ -41,10 +41,11 @@ public class DroidDrumzAlphaMain extends Activity {
      * Members ***********************************************************
      *********************************************************************/
 
-    public static final int REQUEST_CODE = 0x0000000A;
-    private SoundManager _soundManager;
-    private MenuManager _menuManager;
-    private int _btn_index;
+    public static final int _SINGLE_SOUND_CODE_ = 0x0000000A,
+                            _PRESET_SOUND_CODE_ = 0x0000000B;
+    private SoundManager    _soundManager;
+    private MenuManager     _menuManager;
+    private int             _btn_index;
 
     /*********************************************************************
      * Getters & Setters *************************************************
@@ -124,6 +125,9 @@ public class DroidDrumzAlphaMain extends Activity {
         if (id == R.id.action_pitch) {
             _menuManager.pitchClicked(_soundManager);
         }
+        if (id == R.id.action_presets) {
+            _menuManager.presetsClicked(_soundManager);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -146,9 +150,10 @@ public class DroidDrumzAlphaMain extends Activity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            if (data.hasExtra("returnKey")) {
-                String userChoiceStr = data.getExtras().getString("returnKey");
+        String userChoiceStr;
+        if (resultCode == RESULT_OK && requestCode == _SINGLE_SOUND_CODE_) {
+            if (data.hasExtra("returnsoundbank")) {
+                userChoiceStr = data.getExtras().getString("returnsoundbank");
                 if (userChoiceStr != null) {
                     int position = 0;
                     for (; position < _soundManager.get_samples().size(); ++position) {
@@ -158,6 +163,14 @@ public class DroidDrumzAlphaMain extends Activity {
                         }
                     }
                     _soundManager.setPresetSoundIndex(position, _btn_index);
+                }
+            }
+        }
+        else if (resultCode == RESULT_OK && requestCode == _PRESET_SOUND_CODE_) {
+            if (data.hasExtra("returnpresetnames")) {
+                userChoiceStr = data.getExtras().getString("returnpresetnames");
+                if (userChoiceStr != null) {
+                    _soundManager.setEntirePresetKit(userChoiceStr);
                 }
             }
         }

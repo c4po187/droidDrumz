@@ -21,6 +21,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.droid.c4po.droiddrumz_alpha" >
 
     <application
@@ -47,7 +48,7 @@
             <!-- Moved whole intent filter region to splash_screen activity section -->
         </activity>
         <activity
-            android:name=".PadAssignmentMenu"
+            android:name=".AssignmentMenu"
             android:label="@string/pad_assign_label" >
         </activity>
     </application>

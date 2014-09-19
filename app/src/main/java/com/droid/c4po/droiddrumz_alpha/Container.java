@@ -23,14 +23,12 @@ package com.droid.c4po.droiddrumz_alpha;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.Button;
 import android.view.ViewTreeObserver;
-
 import java.util.ArrayList;
 
 /**
@@ -53,7 +51,8 @@ public class Container {
      * @param soundManager    :
      *                        Parameter that represents the SoundManager class.
      */
-    public Container(final DroidDrumzAlphaMain currentActivity, final SoundManager soundManager) {
+    public Container(final DroidDrumzAlphaMain currentActivity,
+                     final SoundManager soundManager) {
         _currentActivity = currentActivity;
         GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
         ViewTreeObserver vto_a = gl.getViewTreeObserver();
@@ -146,6 +145,7 @@ public class Container {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
                     f_soundManager.playSound(f_i);
+
                 return false;
             }
         });
@@ -154,14 +154,25 @@ public class Container {
             public boolean onLongClick(View view) {
                 // Send button index to Main activity class
                 _currentActivity.setBtn_index(f_i);
-                Intent pa_intent = new Intent(_currentActivity.getApplicationContext(), PadAssignmentMenu.class);
-                ArrayList<Sample> samples = f_soundManager.get_samples();
-                int sampleSize = samples.size();
+
+                // Initialize a string list and fill it with the sound bank names
                 ArrayList<String> sampleNames = new ArrayList<String>();
-                for (int i = 0; i < sampleSize; ++i)
-                    sampleNames.add(samples.get(i).get_resource_name());
+                for (Sample sample : f_soundManager.get_samples()) {
+                    sampleNames.add(sample.get_resource_name());
+                }
+
+                /* Initialize an intent, attach the string list and start it,
+                 * expecting a result
+                 */
+                Intent pa_intent = new Intent(_currentActivity.getApplicationContext(),
+                        AssignmentMenu.class);
+                pa_intent.putExtra("sb", true);
+                pa_intent.putExtra("currentsound", f_soundManager
+                        .get_current_btn_assigned().get(f_i));
                 pa_intent.putStringArrayListExtra("soundname", sampleNames);
-                _currentActivity.startActivityForResult(pa_intent, DroidDrumzAlphaMain.REQUEST_CODE);
+                _currentActivity.startActivityForResult(pa_intent,
+                        DroidDrumzAlphaMain._SINGLE_SOUND_CODE_);
+
                 return false;
             }
         });
