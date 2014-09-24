@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DroidDrumz-Alpha.iml" filepath="$PROJECT_DIR$/DroidDrumz-Alpha.iml" />
+      <module fileurl="file://$PROJECT_DIR$/annotations-13.0/annotations-13.0.iml" filepath="$PROJECT_DIR$/annotations-13.0/annotations-13.0.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/droidDrumz.iml" filepath="$PROJECT_DIR$/droidDrumz.iml" />
     </modules>

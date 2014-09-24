@@ -23,11 +23,12 @@ package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
 import android.util.Log;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class that represents an audio sample
  */
-public class Sample {
+public class Sample implements Comparable<Sample> {
 
     /*********************************************************************
      * Members ***********************************************************
@@ -63,6 +64,10 @@ public class Sample {
      * Methods ***********************************************************
      *********************************************************************/
 
+    /**
+     * Initialises the class, by setting up the resource name
+     * linked to the resource id.
+     */
     private void init() {
         try {
             _resource_name = _currentActivity.getApplicationContext()
@@ -70,5 +75,23 @@ public class Sample {
         } catch (Exception e) {
             Log.e("Sample: ", "Could not get Resource entry name because, " + e.getMessage());
         }
+    }
+
+    /**
+     * Compares this instance of Sample against another provided
+     * as an argument, based on resource id.
+     *
+     * @param sample    :
+     *                  Parameter represents a sample to compare
+     *                  against this instance.
+     * @return          :
+     *                  Returns -1 if this instances resource id is less,
+     *                  Returns 1 if this instances resource id is more,
+     *                  Returns 0 if both resource ids are equal.
+     */
+    @Override
+    public int compareTo(@NotNull Sample sample) {
+        return (this.get_resource_id() < sample.get_resource_id()) ? -1 :
+                (this.get_resource_id() > sample.get_resource_id()) ? 1 : 0;
     }
 }

@@ -25,7 +25,9 @@ import android.content.Context;
 import android.media.SoundPool;
 import android.media.AudioManager;
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +64,12 @@ public class SoundManager extends SoundPool {
     private List<Integer>            _electro,
                                      _tech_grit,
                                      _chiptune;
+    
+    private List<String>             _electro_str,
+                                     _tech_grit_str,
+                                     _chiptune_str;
+
+    private ArrayList<ArrayList<String>>       _custom_presets;
 
     /*********************************************************************
      * Getters & Setters *************************************************
@@ -76,10 +84,6 @@ public class SoundManager extends SoundPool {
     public String get_current_kit_assigned() { return _current_kit_assigned; }
 
     public List<String> get_current_btn_assigned() { return _current_btn_assigned; }
-
-    public void set_current_btn_assigned(int index, String new_sound) {
-        _current_btn_assigned.set(index, new_sound);
-    }
 
     /**
      *
@@ -112,6 +116,8 @@ public class SoundManager extends SoundPool {
         _electro = new ArrayList<Integer>();
         _tech_grit = new ArrayList<Integer>();
         _chiptune = new ArrayList<Integer>();
+
+        _custom_presets = new ArrayList<ArrayList<String>>();
     }
 
     /*********************************************************************
@@ -143,23 +149,13 @@ public class SoundManager extends SoundPool {
             // Init the Selected Presets to 12 non-nullable values
             for (int i = 0; i < 12; ++i) {
                 _selected_preset.add(i);
+                _current_btn_assigned.add("empty");
             }
 
             /* Setup the Current Assigned Button strings initially to
              * mirror the default electro kit
              */
-            _current_btn_assigned.add("tr808kick01");
-            _current_btn_assigned.add("tr808snare01");
-            _current_btn_assigned.add("tr808clap01");
-            _current_btn_assigned.add("tr808hatc01");
-            _current_btn_assigned.add("tr808hato01");
-            _current_btn_assigned.add("tr808shaker01");
-            _current_btn_assigned.add("tr808clave");
-            _current_btn_assigned.add("tr808cow");
-            _current_btn_assigned.add("r808ride04");
-            _current_btn_assigned.add("tr808conga01");
-            _current_btn_assigned.add("tr808conga02");
-            _current_btn_assigned.add("tr808conga03");
+            Collections.copy(_current_btn_assigned, _electro_str);
 
             // Set selected preset to electro initially using a deep copy
             Collections.copy(_selected_preset, _preset_lists.get(1));
@@ -181,6 +177,8 @@ public class SoundManager extends SoundPool {
     private boolean loadPresets() {
         // Init Preset Names Array List
         _PRESET_NAMES_ = new ArrayList<String>();
+
+        
 
         // Fill up Chiptune preset
         _chiptune.add(this.load(_currentActivity, R.raw.chipkick2, 1));
@@ -234,7 +232,78 @@ public class SoundManager extends SoundPool {
         _preset_lists.add(_tech_grit);
         _PRESET_NAMES_.add("Technical Grit");
 
-        return (_preset_lists.size() == _PRESET_NAMES_.size());
+        // File testing
+        String dir_str = _currentActivity.getApplicationInfo().dataDir;
+        Log.d("Data Directory: ", dir_str);
+        File dir = new File(dir_str);
+        File []dir_contents = dir.listFiles();
+
+        for (File f : dir_contents) {
+            if (f.isFile()) {
+                _PRESET_NAMES_.add(f.getName().replace(".pst", ""));
+
+            }
+        }
+        
+        return (setupPresetKitStrings() && 
+                (_preset_lists.size() == _PRESET_NAMES_.size()));
+    }
+
+    /**
+     * Method that sets up the preset kit name strings
+     *
+     * @return :
+     *         True if number of setups match.
+     */
+    private boolean setupPresetKitStrings() {
+        int listTracker = 0, num_setups = 3;
+
+        _electro_str = new ArrayList<String>();
+        _electro_str.add("tr808kick01");
+        _electro_str.add("tr808snare01");
+        _electro_str.add("tr808clap01");
+        _electro_str.add("tr808hatc01");
+        _electro_str.add("tr808hato01");
+        _electro_str.add("tr808shaker01");
+        _tech_grit_str = new ArrayList<String>();
+        _tech_grit_str.add("biabkick10");
+        _tech_grit_str.add("biabhardsn2");
+        _tech_grit_str.add("dr660perc32");
+        _tech_grit_str.add("biabkick4");
+        _electro_str.add("tr808clave");
+        _electro_str.add("tr808cow");
+        _electro_str.add("tr808ride04");
+        _electro_str.add("tr808conga01");
+        _electro_str.add("tr808conga02");
+        _electro_str.add("tr808conga03");
+        ++listTracker;
+
+        _tech_grit_str.add("dr660snare11");
+        _tech_grit_str.add("biabhat2");
+        _tech_grit_str.add("dr660perc69");
+        _tech_grit_str.add("dr660perc68");
+        _tech_grit_str.add("biabhat3");
+        _tech_grit_str.add("dr660perc72");
+        _tech_grit_str.add("quasia011");
+        _tech_grit_str.add("quasia013");
+        ++listTracker;
+
+        _chiptune_str = new ArrayList<String>();
+        _chiptune_str.add("chipkick2");
+        _chiptune_str.add("chipsn5");
+        _chiptune_str.add("chipsn6");
+        _chiptune_str.add("chipkick1");
+        _chiptune_str.add("chiphat6");
+        _chiptune_str.add("chiphat8");
+        _chiptune_str.add("chipfx1");
+        _chiptune_str.add("chipfx3");
+        _chiptune_str.add("chipfx5");
+        _chiptune_str.add("chipfx6");
+        _chiptune_str.add("chipfx7");
+        _chiptune_str.add("chipfx10");
+        ++listTracker;
+
+        return (listTracker == num_setups);
     }
 
     /**
@@ -273,6 +342,14 @@ public class SoundManager extends SoundPool {
     public boolean setEntirePresetKit(String userChoiceStr) {
         if (userChoiceStr != null) {
             _current_kit_assigned = userChoiceStr;
+
+            if (_current_kit_assigned.equals("Chiptune"))
+                Collections.copy(_current_btn_assigned, _chiptune_str);
+            else if (_current_kit_assigned.equals("Electro"))
+                Collections.copy(_current_btn_assigned, _electro_str);
+            else
+                Collections.copy(_current_btn_assigned, _tech_grit_str);
+
             int position = _PRESET_NAMES_.indexOf(userChoiceStr);
             Collections.copy(_selected_preset, _preset_lists.get(position));
             return true;
