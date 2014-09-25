@@ -35,6 +35,7 @@ import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import java.io.FileOutputStream;
+import org.jetbrains.annotations.*;
 
 /**
  * Class that manages all Menu interactions
@@ -106,7 +107,7 @@ public class MenuManager {
     /**
      * Method that creates the Pitch Dialog, it also captures the users choice.
      */
-    public void pitchClicked(final SoundManager soundManager) {
+    public void pitchClicked(@NotNull final SoundManager soundManager) {
         _previous_pitch_index = _pitch_current_index;
         String[] pitchValues = { "Half Speed", "Normal Speed", "Double Speed" };
 
@@ -150,7 +151,7 @@ public class MenuManager {
     /**
      * Method to handle the clicking of the Presets option
      */
-    public void presetsClicked(final SoundManager soundManager) {
+    public void presetsClicked(@NotNull final SoundManager soundManager) {
         String[] presets_options = { "Load Preset", "Save Preset" };
 
         new AlertDialog.Builder(_currentActivity)

@@ -22,8 +22,9 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
+import android.media.SoundPool;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 
 /**
  * Class that represents an audio sample
@@ -34,13 +35,19 @@ public class Sample implements Comparable<Sample> {
      * Members ***********************************************************
      *********************************************************************/
 
-    private int _resource_id;
-    private String _resource_name;
-    private Activity _currentActivity;
+    private int         _soundID,
+                        _resource_id;
+    private String      _resource_name;
+    private Activity    _currentActivity;
+    private SoundPool   _soundpool;
 
     /*********************************************************************
      * Getters & Setters *************************************************
      *********************************************************************/
+
+    public int get_soundID() {
+        return _soundID;
+    }
 
     public int get_resource_id() {
         return _resource_id;
@@ -51,10 +58,20 @@ public class Sample implements Comparable<Sample> {
     }
 
     /*********************************************************************
+     * Chain Setters *****************************************************
+     *********************************************************************/
+
+    public Sample initLoadSoundID() {
+        _soundID = _soundpool.load(_currentActivity, _resource_id, 1);
+        return this;
+    }
+
+    /*********************************************************************
      * Constructor *******************************************************
      *********************************************************************/
 
-    public Sample(Activity activity, int resId) {
+    public Sample(SoundPool soundpool, Activity activity, int resId) {
+        _soundpool = soundpool;
         _currentActivity = activity;
         _resource_id = resId;
         init();
@@ -65,7 +82,7 @@ public class Sample implements Comparable<Sample> {
      *********************************************************************/
 
     /**
-     * Initialises the class, by setting up the resource name
+     * Initialises the class, by setting up the resource name and soundID
      * linked to the resource id.
      */
     private void init() {
@@ -73,7 +90,7 @@ public class Sample implements Comparable<Sample> {
             _resource_name = _currentActivity.getApplicationContext()
                     .getResources().getResourceEntryName(_resource_id);
         } catch (Exception e) {
-            Log.e("Sample: ", "Could not get Resource entry name because, " + e.getMessage());
+            Log.e("Sample: ", "Something wicked happened, " + e.getMessage());
         }
     }
 
@@ -81,7 +98,7 @@ public class Sample implements Comparable<Sample> {
      * Compares this instance of Sample against another provided
      * as an argument, based on resource id.
      *
-     * @param sample    :
+     * @param other     :
      *                  Parameter represents a sample to compare
      *                  against this instance.
      * @return          :
@@ -90,8 +107,8 @@ public class Sample implements Comparable<Sample> {
      *                  Returns 0 if both resource ids are equal.
      */
     @Override
-    public int compareTo(@NotNull Sample sample) {
-        return (this.get_resource_id() < sample.get_resource_id()) ? -1 :
-                (this.get_resource_id() > sample.get_resource_id()) ? 1 : 0;
+    public int compareTo(@NotNull Sample other) {
+        return (this.get_resource_id() < other.get_resource_id()) ? -1 :
+                (this.get_resource_id() > other.get_resource_id()) ? 1 : 0;
     }
 }

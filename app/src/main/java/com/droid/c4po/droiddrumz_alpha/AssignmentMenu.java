@@ -164,15 +164,6 @@ public class AssignmentMenu extends ListActivity {
         else
             _menu_list = this.getIntent().getStringArrayListExtra("presetnames");
 
-
-        // Sort the list alphabetically
-        Collections.sort(_menu_list, new Comparator<String>() {
-            @Override
-            public int compare(String s, String s2) {
-                return s.compareToIgnoreCase(s2);
-            }
-        });
-
         AssignAdapter<String> pa_adapter = new AssignAdapter<String>(
                 this, R.layout.assign_menu_row, R.id.pa_text, _menu_list);
 

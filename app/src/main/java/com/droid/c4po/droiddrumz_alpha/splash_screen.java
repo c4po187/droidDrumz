@@ -137,7 +137,6 @@ public class splash_screen extends Activity implements OnClickListener {
             if (_splashPlayer_looper != null)
                 _splashPlayer_looper.stop();
             finish();
-            //System.exit(0);
         }
     }
 }

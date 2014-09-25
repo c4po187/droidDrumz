@@ -143,9 +143,9 @@ public class Container {
         btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                    f_soundManager.playSound(f_i);
-
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    f_soundManager.playSample(f_i);
+                }
                 return false;
             }
         });

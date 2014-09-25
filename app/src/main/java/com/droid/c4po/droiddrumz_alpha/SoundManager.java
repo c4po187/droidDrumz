@@ -27,7 +27,6 @@ import android.media.AudioManager;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,33 +42,30 @@ public class SoundManager extends SoundPool {
      *********************************************************************/
 
     private Activity                 _currentActivity;
+
     private int                      _streamID,
                                      _loop;
+
     private float                    _volume,
                                      _pitch;
+
     private static int               _SOUND_BANK_START_INDEX_ = 0x7f040000,
                                      _SOUND_BANK_END_INDEX_ = 0x7f0402a2;
-    private List<Integer>            _selected_preset;
-    private List<List<Integer>>      _preset_lists;
+
     private ArrayList<Sample>        _samples;
+
+    public static ArrayList<String>  _PRESET_NAMES_;
+
+    private List<List<Sample>>       _preset_container;
+
+    private List<Sample>             _selected_samples;
+
+    private List<Sample>             _electro_samples,
+                                     _chiptune_samples,
+                                     _tech_grit_samples;
 
     private List<String>             _current_btn_assigned;
     private String                   _current_kit_assigned;
-
-    /**
-     * Presets
-     */
-
-    public static ArrayList<String>  _PRESET_NAMES_;
-    private List<Integer>            _electro,
-                                     _tech_grit,
-                                     _chiptune;
-    
-    private List<String>             _electro_str,
-                                     _tech_grit_str,
-                                     _chiptune_str;
-
-    private ArrayList<ArrayList<String>>       _custom_presets;
 
     /*********************************************************************
      * Getters & Setters *************************************************
@@ -105,19 +101,20 @@ public class SoundManager extends SoundPool {
     public SoundManager(int maxStreams, int streamType, int srcQuality,
                         Activity currentActivity) {
         super(maxStreams, streamType, srcQuality);
+
         _currentActivity = currentActivity;
         _loop = 0;
         _pitch = 1.0f;
-        _selected_preset = new ArrayList<Integer>();
-        _preset_lists = new ArrayList<List<Integer>>();
+
         _current_btn_assigned = new ArrayList<String>();
         _current_kit_assigned = "";
-        // Init our presets
-        _electro = new ArrayList<Integer>();
-        _tech_grit = new ArrayList<Integer>();
-        _chiptune = new ArrayList<Integer>();
 
-        _custom_presets = new ArrayList<ArrayList<String>>();
+        _preset_container = new ArrayList<List<Sample>>();
+        _selected_samples = new ArrayList<Sample>();
+
+        _chiptune_samples = new ArrayList<Sample>();
+        _electro_samples = new ArrayList<Sample>();
+        _tech_grit_samples = new ArrayList<Sample>();
     }
 
     /*********************************************************************
@@ -140,26 +137,33 @@ public class SoundManager extends SoundPool {
             // Set up Samples
             _samples = new ArrayList<Sample>();
 
+            /* Grab all the audio samples from the raw folder and add them to the samples list
+             * for use with the Assignment menu, as a list of strings will be compiled from
+             * each and every resource name within this list of samples.
+             */
             for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index) {
                 // We don't want the splash loop in there
                 if (index != 0x7f040221)
-                    _samples.add(new Sample(_currentActivity, index));
+                    _samples.add(new Sample(this, _currentActivity, index));
             }
 
-            // Init the Selected Presets to 12 non-nullable values
+            // Sort the sample list alphabetically by resource name
+            Collections.sort(_samples, new SortSamplesByResourceName());
+
+            // Init the Selected samples and button strings to 12 non-nullable values
             for (int i = 0; i < 12; ++i) {
-                _selected_preset.add(i);
                 _current_btn_assigned.add("empty");
+                _selected_samples.add(new Sample(this, _currentActivity, i));
             }
 
-            /* Setup the Current Assigned Button strings initially to
-             * mirror the default electro kit
-             */
-            Collections.copy(_current_btn_assigned, _electro_str);
+            // Copy the electro kit in the preset container (index 1) to the selected samples
+            Collections.copy(_selected_samples, _preset_container.get(1));
 
-            // Set selected preset to electro initially using a deep copy
-            Collections.copy(_selected_preset, _preset_lists.get(1));
+            // Set Current Kit string to Electro string from the preset names list
             _current_kit_assigned = _PRESET_NAMES_.get(1);
+
+            // Setup all the currently assigned resource names
+            assignResourceNames();
 
         } else {
             Toast.makeText(_currentActivity.getApplicationContext(),
@@ -178,132 +182,77 @@ public class SoundManager extends SoundPool {
         // Init Preset Names Array List
         _PRESET_NAMES_ = new ArrayList<String>();
 
-        
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipkick2).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipsn5).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipsn6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipkick1).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chiphat6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chiphat8).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx1).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx3).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx5).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx7).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx10).initLoadSoundID());
 
-        // Fill up Chiptune preset
-        _chiptune.add(this.load(_currentActivity, R.raw.chipkick2, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipsn5, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipsn6, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipkick1, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chiphat6, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chiphat8, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx1, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx3, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx5, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx6, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx7, 1));
-        _chiptune.add(this.load(_currentActivity, R.raw.chipfx10, 1));
-
-        // Add Chiptune list to major preset list, and its name to a String list
-        _preset_lists.add(_chiptune);
+        _preset_container.add(_chiptune_samples);
         _PRESET_NAMES_.add("Chiptune");
 
-        // Fill up Electro Presets, Strings, etc...
-        _electro.add(this.load(_currentActivity, R.raw.tr808kick01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808snare01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808clap01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808hatc01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808hato01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808shaker01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808clave, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808cow, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808ride04, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808conga01, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808conga02, 1));
-        _electro.add(this.load(_currentActivity, R.raw.tr808conga03, 1));
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808kick01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808snare01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808clap01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808hatc01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808hato01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808shaker01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808clave).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808cow).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808ride04).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga02).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga03).initLoadSoundID());
 
-        _preset_lists.add(_electro);
+        _preset_container.add(_electro_samples);
         _PRESET_NAMES_.add("Electro");
 
-        // Fill up Technical Grit presets, Strings, etc...
-        _tech_grit.add(this.load(_currentActivity, R.raw.biabkick10, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.biabhardsn2, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.dr660perc32, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.biabkick4, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.dr660snare11, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.biabhat2, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.dr660perc69, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.dr660perc68, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.biabhat3, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.dr660perc72, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.quasia011, 1));
-        _tech_grit.add(this.load(_currentActivity, R.raw.quasia013, 1));
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabkick10).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhardsn2).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc32).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabkick4).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare11).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhat2).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc69).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc68).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhat3).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc72).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.quasia011).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.quasia013).initLoadSoundID());
 
-        _preset_lists.add(_tech_grit);
+        _preset_container.add(_tech_grit_samples);
         _PRESET_NAMES_.add("Technical Grit");
 
-        // File testing
-        String dir_str = _currentActivity.getApplicationInfo().dataDir;
-        Log.d("Data Directory: ", dir_str);
-        File dir = new File(dir_str);
-        File []dir_contents = dir.listFiles();
-
-        for (File f : dir_contents) {
-            if (f.isFile()) {
-                _PRESET_NAMES_.add(f.getName().replace(".pst", ""));
-
-            }
-        }
-        
-        return (setupPresetKitStrings() && 
-                (_preset_lists.size() == _PRESET_NAMES_.size()));
+        return (_preset_container.size() == _PRESET_NAMES_.size());
     }
 
     /**
-     * Method that sets up the preset kit name strings
+     * Assign all the Samples Resource Names to a string list
+     * upon a user designated change.
      *
-     * @return :
-     *         True if number of setups match.
+     * @return  :
+     *          Returns true on success, false otherwise.
      */
-    private boolean setupPresetKitStrings() {
-        int listTracker = 0, num_setups = 3;
+    private boolean assignResourceNames() {
+        boolean error_free = true;
+        for (int i = 0; i < _current_btn_assigned.size(); ++i) {
+            try {
+                _current_btn_assigned.set(i, _selected_samples.get(i).get_resource_name());
+            } catch (Exception e) {
+                Log.e("SoundManager: ", "Could not copy resource name at index[" +
+                                String.valueOf(i) + "] because, " + e.getMessage());
+                error_free = false;
+            }
+        }
 
-        _electro_str = new ArrayList<String>();
-        _electro_str.add("tr808kick01");
-        _electro_str.add("tr808snare01");
-        _electro_str.add("tr808clap01");
-        _electro_str.add("tr808hatc01");
-        _electro_str.add("tr808hato01");
-        _electro_str.add("tr808shaker01");
-        _tech_grit_str = new ArrayList<String>();
-        _tech_grit_str.add("biabkick10");
-        _tech_grit_str.add("biabhardsn2");
-        _tech_grit_str.add("dr660perc32");
-        _tech_grit_str.add("biabkick4");
-        _electro_str.add("tr808clave");
-        _electro_str.add("tr808cow");
-        _electro_str.add("tr808ride04");
-        _electro_str.add("tr808conga01");
-        _electro_str.add("tr808conga02");
-        _electro_str.add("tr808conga03");
-        ++listTracker;
-
-        _tech_grit_str.add("dr660snare11");
-        _tech_grit_str.add("biabhat2");
-        _tech_grit_str.add("dr660perc69");
-        _tech_grit_str.add("dr660perc68");
-        _tech_grit_str.add("biabhat3");
-        _tech_grit_str.add("dr660perc72");
-        _tech_grit_str.add("quasia011");
-        _tech_grit_str.add("quasia013");
-        ++listTracker;
-
-        _chiptune_str = new ArrayList<String>();
-        _chiptune_str.add("chipkick2");
-        _chiptune_str.add("chipsn5");
-        _chiptune_str.add("chipsn6");
-        _chiptune_str.add("chipkick1");
-        _chiptune_str.add("chiphat6");
-        _chiptune_str.add("chiphat8");
-        _chiptune_str.add("chipfx1");
-        _chiptune_str.add("chipfx3");
-        _chiptune_str.add("chipfx5");
-        _chiptune_str.add("chipfx6");
-        _chiptune_str.add("chipfx7");
-        _chiptune_str.add("chipfx10");
-        ++listTracker;
-
-        return (listTracker == num_setups);
+        return error_free;
     }
 
     /**
@@ -315,18 +264,18 @@ public class SoundManager extends SoundPool {
      * @param index   :
      *                Parameter represents the position in the array to set.
      * @return        :
-     *                Returns true upon loading a sound to the presets,
-     *                false if the index is out of bounds.
+     *                Returns true upon loading a sound to the presets, and
+     *                assigning the resource names. False if the index is
+     *                out of bounds.
      */
     public boolean setPresetSoundIndex(int soundId, int index) {
-        if (index >= _selected_preset.size() || index < 0)
+        if (index >= _selected_samples.size() || index < 0)
             return false;
         else {
-            _selected_preset.set(index, this.load(_currentActivity,
-                    _samples.get(soundId).get_resource_id(), 1));
-            _current_btn_assigned.set(index, _samples.get(soundId)
-                    .get_resource_name());
-            return true;
+            _selected_samples.set(index, new Sample(this, _currentActivity,
+                    _samples.get(soundId).get_resource_id()).initLoadSoundID());
+
+            return assignResourceNames();
         }
     }
 
@@ -337,36 +286,29 @@ public class SoundManager extends SoundPool {
      *                      Parameter represents the users choice
      *                      from the menu.
      * @return              :
-     *                      Returns true on success, false otherwise.
+     *                      Returns true on success whilst assigning
+     *                      the resource names, false otherwise.
      */
     public boolean setEntirePresetKit(String userChoiceStr) {
         if (userChoiceStr != null) {
             _current_kit_assigned = userChoiceStr;
-
-            if (_current_kit_assigned.equals("Chiptune"))
-                Collections.copy(_current_btn_assigned, _chiptune_str);
-            else if (_current_kit_assigned.equals("Electro"))
-                Collections.copy(_current_btn_assigned, _electro_str);
-            else
-                Collections.copy(_current_btn_assigned, _tech_grit_str);
-
             int position = _PRESET_NAMES_.indexOf(userChoiceStr);
-            Collections.copy(_selected_preset, _preset_lists.get(position));
-            return true;
+            Collections.copy(_selected_samples, _preset_container.get(position));
+
+            return assignResourceNames();
         } else {
             return false;
         }
     }
 
-
     /**
-     * Plays a sound from the sound bank when a pad is pressed,
-     * based on the given soundID.
+     * Plays a sample from the selected sample list when a pad is pressed.
      *
-     * @param soundID :
-     *                Index of sound in sound bank(_presetSoundIDs).
+     * @param btn_num   :
+     *                  Parameter represents one of the 12 hit pads.
      */
-    public void playSound(int soundID) {
-        _streamID = this.play(_selected_preset.get(soundID), _volume, _volume, 1, _loop, _pitch);
+    public void playSample(int btn_num) {
+        _streamID = this.play(_selected_samples.get(btn_num).get_soundID(),
+                _volume, _volume, 1, _loop, _pitch);
     }
 }
