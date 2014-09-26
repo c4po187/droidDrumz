@@ -62,7 +62,8 @@ public class SoundManager extends SoundPool {
 
     private List<Sample>             _electro_samples,
                                      _chiptune_samples,
-                                     _tech_grit_samples;
+                                     _tech_grit_samples,
+                                     _jungle_samples;
 
     private List<String>             _current_btn_assigned;
     private String                   _current_kit_assigned;
@@ -115,6 +116,7 @@ public class SoundManager extends SoundPool {
         _chiptune_samples = new ArrayList<Sample>();
         _electro_samples = new ArrayList<Sample>();
         _tech_grit_samples = new ArrayList<Sample>();
+        _jungle_samples = new ArrayList<Sample>();
     }
 
     /*********************************************************************
@@ -213,6 +215,22 @@ public class SoundManager extends SoundPool {
 
         _preset_container.add(_electro_samples);
         _PRESET_NAMES_.add("Electro");
+
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660kick37).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare10).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare47).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660kick42).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare21).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare22).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660crash03).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660ride02).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660hatc05).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc65).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc40).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660hato05).initLoadSoundID());
+
+        _preset_container.add(_jungle_samples);
+        _PRESET_NAMES_.add("Jungle");
 
         _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabkick10).initLoadSoundID());
         _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhardsn2).initLoadSoundID());
