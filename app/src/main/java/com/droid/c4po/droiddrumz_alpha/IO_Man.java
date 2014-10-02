@@ -21,6 +21,8 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
+import android.app.Activity;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -118,6 +120,25 @@ public class IO_Man {
      */
     public static ArrayList<String> getStringArrayListFromFile(File file) throws Exception {
         _fileInputStream = new FileInputStream(file);
+        ArrayList<String> data = convertStreamToStringList(_fileInputStream);
+        _fileInputStream.close();
+        return data;
+    }
+
+    /**
+     * Method outputs a list of Strings from the data provided by the filename.
+     *
+     * @param filename      :
+     *                      Parameter represents a filename.
+     * @param activity      :
+     *                      Parameter represents an activity.
+     * @return              :
+     *                      Returns an Array List of type String.
+     * @throws Exception
+     */
+    public static  ArrayList<String> getStringArrayListFromFileName(
+            String filename, Activity activity) throws Exception {
+        _fileInputStream = activity.openFileInput(filename);
         ArrayList<String> data = convertStreamToStringList(_fileInputStream);
         _fileInputStream.close();
         return data;

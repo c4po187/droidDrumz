@@ -80,6 +80,10 @@ public class SoundManager extends SoundPool {
 
     public String get_current_kit_assigned() { return _current_kit_assigned; }
 
+    public void set_current_kit_assigned(String current_kit_assigned) {
+        _current_kit_assigned = current_kit_assigned;
+    }
+
     public List<String> get_current_btn_assigned() { return _current_btn_assigned; }
 
     /**
@@ -157,6 +161,9 @@ public class SoundManager extends SoundPool {
                 _current_btn_assigned.add("empty");
                 _selected_samples.add(new Sample(this, _currentActivity, i));
             }
+
+            // Get saved presets
+            getSavedPresets();
 
             // Copy the electro kit in the preset container (index 1) to the selected samples
             Collections.copy(_selected_samples, _preset_container.get(1));
@@ -249,6 +256,52 @@ public class SoundManager extends SoundPool {
         _PRESET_NAMES_.add("Technical Grit");
 
         return (_preset_container.size() == _PRESET_NAMES_.size());
+    }
+
+    /**
+     * Method that grabs all the user saved presets and adds them
+     * to the preset container for instant usage.
+     */
+    public void getSavedPresets() {
+        boolean kill = false;
+        String[] savedPresets = _currentActivity.fileList();
+        if (savedPresets.length > 0) {
+            for (String filename : savedPresets) {
+
+                // First let's see if the preset has already been added
+                for (String presetNames : _PRESET_NAMES_) {
+                    if (presetNames.equals(filename.replace(".pst", "")))
+                        kill = true;
+                }
+
+                if(!kill) {
+                    _PRESET_NAMES_.add(filename.replace(".pst", ""));
+
+                    // Get a list of sounds in the preset from each file
+                    ArrayList<String> presetItemsStr = new ArrayList<String>();
+                    try {
+                        presetItemsStr = IO_Man.getStringArrayListFromFileName(filename, _currentActivity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    // Add all the sounds to a preset kit
+                    List<Sample> custom_preset = new ArrayList<Sample>();
+                    for (String item : presetItemsStr) {
+                        for (Sample sample : _samples) {
+                            if (item.equals(sample.get_resource_name())) {
+                                custom_preset.add(sample.initLoadSoundID());
+                            }
+                        }
+                    }
+
+                    // Add the kit to the container
+                    _preset_container.add(custom_preset);
+                }
+                else
+                    kill = false;
+            }
+        }
     }
 
     /**

@@ -234,7 +234,11 @@ public class MenuManager {
                         }
                         dialogInterface.dismiss();
                         Toast.makeText(_currentActivity.getApplicationContext(),
-                                filename, Toast.LENGTH_LONG).show();
+                                filename + " Saved Successfully...", Toast.LENGTH_LONG).show();
+
+                        // Get our saved preset added immediately
+                        soundManager.getSavedPresets();
+                        soundManager.set_current_kit_assigned(save_name.toString());
                     }
                 })
                 .setNegativeButton(R.string.tc, new DialogInterface.OnClickListener() {
