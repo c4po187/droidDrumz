@@ -35,8 +35,6 @@ import android.widget.TableRow;
 /**
  * Small Class that simply handles the splash screen, and starts the main
  * program upon clicking the start button funnily enough.
- *
- * TODO: Fix up the SplashPlayer loop, the loop quality is dire!
  */
 public class splash_screen extends Activity implements OnClickListener {
 
@@ -88,10 +86,13 @@ public class splash_screen extends Activity implements OnClickListener {
      * correctly based on the users device.
      */
     private void setButtonVerticalPositions() {
-        // Retrieve the screen dimensions
-        DimensionHelper dimHelper = new DimensionHelper(this);
-        dimHelper.calculateScreenDimensions();
-        int height = dimHelper.getScreenHeight();
+        // Retrieve the screen dimensions (we just need the height for now).
+        int height = 0;
+        try {
+            height = DimensionHelper.calculateDeviceScreenResolution(this.getApplicationContext()).y;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Position Button row vertically
         int row_vert_pos = ((height / 100) * 65);   // 65%

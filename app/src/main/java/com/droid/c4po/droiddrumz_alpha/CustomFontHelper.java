@@ -50,7 +50,7 @@ public class CustomFontHelper {
     /**
      * Method that tries to create a Typeface from a given true-type font.
      *
-     * @param c         :
+     * @param context   :
      *                  Parameter represents a context.
      * @param assetPath :
      *                  Parameter represents a string that is a path to
@@ -59,11 +59,11 @@ public class CustomFontHelper {
      *                  Returns a Typeface created from the true-type font
      *                  if successful. Returns a null Typeface otherwise.
      */
-    public static Typeface get(Context c, String assetPath) {
+    public static Typeface get(Context context, String assetPath) {
         synchronized (cache) {
             if (!cache.containsKey(assetPath)) {
                 try {
-                    Typeface t = Typeface.createFromAsset(c.getAssets(), assetPath);
+                    Typeface t = Typeface.createFromAsset(context.getAssets(), assetPath);
                     cache.put(assetPath, t);
                 } catch (Exception e) {
                     Log.e(TAG, "Could not get typeface, " + assetPath

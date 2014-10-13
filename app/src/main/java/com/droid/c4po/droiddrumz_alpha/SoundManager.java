@@ -41,7 +41,7 @@ public class SoundManager extends SoundPool {
      * Members ***********************************************************
      *********************************************************************/
 
-    private Activity                 _currentActivity;
+    private Context                  _context;
 
     private int                      _streamID,
                                      _loop;
@@ -98,16 +98,15 @@ public class SoundManager extends SoundPool {
      * @param srcQuality      :
      *                        Needed but unused parameter: always
      *                        set to zero.
-     * @param currentActivity :
+     * @param context         :
      *                        Parameter that passes the Activity
      *                        class, merely needed to access many
      *                        of its useful methods.
      */
-    public SoundManager(int maxStreams, int streamType, int srcQuality,
-                        Activity currentActivity) {
+    public SoundManager(int maxStreams, int streamType, int srcQuality, Context context) {
         super(maxStreams, streamType, srcQuality);
-
-        _currentActivity = currentActivity;
+        
+        _context = context;
         _loop = 0;
         _pitch = 1.0f;
 
@@ -129,16 +128,18 @@ public class SoundManager extends SoundPool {
 
     /**
      * Initialise all objects and data within this class.
+     *
+     * @param ctx   :
+     *              Parameter represents the Main Activity.
      */
-    public void init() {
+    public void init(Activity ctx) {
         // If Load Presets Successful, continue
         if (loadPresets()) {
             // Set up AudioManager
-            AudioManager audioManager = (AudioManager) _currentActivity.getSystemService(
-                    Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager)_context.getSystemService(Context.AUDIO_SERVICE);
             _volume = ((float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) /
                     (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-            _currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            ctx.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
             // Set up Samples
             _samples = new ArrayList<Sample>();
@@ -150,7 +151,7 @@ public class SoundManager extends SoundPool {
             for (int index = _SOUND_BANK_START_INDEX_; index <= _SOUND_BANK_END_INDEX_; ++index) {
                 // We don't want the splash loop in there
                 if (index != 0x7f040221)
-                    _samples.add(new Sample(this, _currentActivity, index));
+                    _samples.add(new Sample(this, _context, index));
             }
 
             // Sort the sample list alphabetically by resource name
@@ -159,7 +160,7 @@ public class SoundManager extends SoundPool {
             // Init the Selected samples and button strings to 12 non-nullable values
             for (int i = 0; i < 12; ++i) {
                 _current_btn_assigned.add("empty");
-                _selected_samples.add(new Sample(this, _currentActivity, i));
+                _selected_samples.add(new Sample(this, _context, i));
             }
 
             // Get saved presets
@@ -175,8 +176,7 @@ public class SoundManager extends SoundPool {
             assignResourceNames();
 
         } else {
-            Toast.makeText(_currentActivity.getApplicationContext(),
-                    "Error Initializing Sound Bank!", Toast.LENGTH_LONG).show();
+            Toast.makeText(_context, "Error Initializing Sound Bank!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -191,66 +191,66 @@ public class SoundManager extends SoundPool {
         // Init Preset Names Array List
         _PRESET_NAMES_ = new ArrayList<String>();
 
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipkick2).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipsn5).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipsn6).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipkick1).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chiphat6).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chiphat8).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx1).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx3).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx5).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx6).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx7).initLoadSoundID());
-        _chiptune_samples.add(new Sample(this, _currentActivity, R.raw.chipfx10).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipkick2).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipsn5).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipsn6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipkick1).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chiphat6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chiphat8).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx1).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx3).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx5).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx6).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx7).initLoadSoundID());
+        _chiptune_samples.add(new Sample(this, _context, R.raw.chipfx10).initLoadSoundID());
 
         _preset_container.add(_chiptune_samples);
         _PRESET_NAMES_.add("Chiptune");
 
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808kick01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808snare01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808clap01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808hatc01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808hato01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808shaker01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808clave).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808cow).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808ride04).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga01).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga02).initLoadSoundID());
-        _electro_samples.add(new Sample(this, _currentActivity, R.raw.tr808conga03).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808kick01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808snare01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808clap01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808hatc01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808hato01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808shaker01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808clave).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808cow).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808ride04).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808conga01).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808conga02).initLoadSoundID());
+        _electro_samples.add(new Sample(this, _context, R.raw.tr808conga03).initLoadSoundID());
 
         _preset_container.add(_electro_samples);
         _PRESET_NAMES_.add("Electro");
 
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660kick37).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare10).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare47).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660kick42).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare21).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare22).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660crash03).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660ride02).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660hatc05).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc65).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc40).initLoadSoundID());
-        _jungle_samples.add(new Sample(this, _currentActivity, R.raw.dr660hato05).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660kick37).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660snare10).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660snare47).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660kick42).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660snare21).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660snare22).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660crash03).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660ride02).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660hatc05).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660perc65).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660perc40).initLoadSoundID());
+        _jungle_samples.add(new Sample(this, _context, R.raw.dr660hato05).initLoadSoundID());
 
         _preset_container.add(_jungle_samples);
         _PRESET_NAMES_.add("Jungle");
 
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabkick10).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhardsn2).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc32).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabkick4).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660snare11).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhat2).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc69).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc68).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.biabhat3).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.dr660perc72).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.quasia011).initLoadSoundID());
-        _tech_grit_samples.add(new Sample(this, _currentActivity, R.raw.quasia013).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.biabkick10).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.biabhardsn2).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.dr660perc32).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.biabkick4).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.dr660snare11).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.biabhat2).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.dr660perc69).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.dr660perc68).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.biabhat3).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.dr660perc72).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.quasia011).initLoadSoundID());
+        _tech_grit_samples.add(new Sample(this, _context, R.raw.quasia013).initLoadSoundID());
 
         _preset_container.add(_tech_grit_samples);
         _PRESET_NAMES_.add("Technical Grit");
@@ -264,7 +264,7 @@ public class SoundManager extends SoundPool {
      */
     public void getSavedPresets() {
         boolean kill = false;
-        String[] savedPresets = _currentActivity.fileList();
+        String[] savedPresets = _context.fileList();
         if (savedPresets.length > 0) {
             for (String filename : savedPresets) {
 
@@ -274,13 +274,13 @@ public class SoundManager extends SoundPool {
                         kill = true;
                 }
 
-                if(!kill) {
+                if (!kill) {
                     _PRESET_NAMES_.add(filename.replace(".pst", ""));
 
                     // Get a list of sounds in the preset from each file
                     ArrayList<String> presetItemsStr = new ArrayList<String>();
                     try {
-                        presetItemsStr = IO_Man.getStringArrayListFromFileName(filename, _currentActivity);
+                        presetItemsStr = IO_Man.getStringArrayListFromFileName(filename, _context);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -343,7 +343,7 @@ public class SoundManager extends SoundPool {
         if (index >= _selected_samples.size() || index < 0)
             return false;
         else {
-            _selected_samples.set(index, new Sample(this, _currentActivity,
+            _selected_samples.set(index, new Sample(this, _context,
                     _samples.get(soundId).get_resource_id()).initLoadSoundID());
 
             return assignResourceNames();

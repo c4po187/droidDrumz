@@ -22,6 +22,7 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,26 +42,26 @@ public class Container {
      * Members ***********************************************************
      *********************************************************************/
 
-    private DroidDrumzAlphaMain _currentActivity;
+    private DroidDrumzAlphaMain _droidDrumzActivity;
 
     /**
      * Constructor
      *
-     * @param currentActivity :
-     *                        Parameter that represents the main Activity class.
-     * @param soundManager    :
-     *                        Parameter that represents the SoundManager class.
+     * @param droidDrumzActivity    :
+     *                              Parameter that represents the main Activity class.
+     * @param soundManager          :
+     *                              Parameter that represents the SoundManager class.
      */
-    public Container(final DroidDrumzAlphaMain currentActivity,
+    public Container(final DroidDrumzAlphaMain droidDrumzActivity,
                      final SoundManager soundManager) {
-        _currentActivity = currentActivity;
-        GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
+        _droidDrumzActivity = droidDrumzActivity;
+        GridLayout gl = (GridLayout)droidDrumzActivity.findViewById(R.id.grid4x3);
         ViewTreeObserver vto_a = gl.getViewTreeObserver();
 
         vto_a.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                GridLayout gl = (GridLayout)currentActivity.findViewById(R.id.grid4x3);
+                GridLayout gl = (GridLayout)droidDrumzActivity.findViewById(R.id.grid4x3);
                 reorganizeGrid(gl, soundManager);
                 ViewTreeObserver vto_b = gl.getViewTreeObserver();
                 vto_b.removeOnGlobalLayoutListener(this);
@@ -84,10 +85,20 @@ public class Container {
      *                     Parameter that represents the SoundManager class.
      */
     public void reorganizeGrid(GridLayout gl, SoundManager soundManager) {
-        DimensionHelper dimHelper = new DimensionHelper(_currentActivity);
-        dimHelper.calculateScreenDimensions();
-        int widthPixels = dimHelper.getScreenWidth();
-        int heightPixels = dimHelper.getScreenHeight();
+        //DimensionHelper dimHelper = new DimensionHelper(_droidDrumzActivity);
+        //dimHelper.calculateScreenDimensions();
+
+        // Retrieve screen resolutions
+        Point screen_res = new Point();
+        try {
+            screen_res =
+                    DimensionHelper.calculateDeviceScreenResolution(
+                            _droidDrumzActivity.getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int widthPixels = screen_res.x;/*dimHelper.getScreenWidth();*/
+        int heightPixels = screen_res.y;/*.getScreenHeight();*/
 
         // Resize the grid based on users device
         int five_percent_x = ((widthPixels / 100) * 5);
@@ -106,7 +117,8 @@ public class Container {
          * handle exceptions on provided fonts, whereas my
          * class does.
          */
-        Typeface btn_font = CustomFontHelper.get(_currentActivity, "Ghang.ttf");
+        Typeface btn_font = CustomFontHelper.get(_droidDrumzActivity.getApplicationContext(),
+                "Ghang.ttf");
 
         for (int i = 0; i < gl.getChildCount(); ++i) {
             tmp_btn = (Button) gl.getChildAt(i);
@@ -153,7 +165,7 @@ public class Container {
             @Override
             public boolean onLongClick(View view) {
                 // Send button index to Main activity class
-                _currentActivity.setBtn_index(f_i);
+                _droidDrumzActivity.setBtn_index(f_i);
 
                 // Initialize a string list and fill it with the sound bank names
                 ArrayList<String> sampleNames = new ArrayList<String>();
@@ -164,13 +176,13 @@ public class Container {
                 /* Initialize an intent, attach the string list and start it,
                  * expecting a result
                  */
-                Intent pa_intent = new Intent(_currentActivity.getApplicationContext(),
+                Intent pa_intent = new Intent(_droidDrumzActivity.getApplicationContext(),
                         AssignmentMenu.class);
                 pa_intent.putExtra("sb", true);
                 pa_intent.putExtra("currentsound", f_soundManager
                         .get_current_btn_assigned().get(f_i));
                 pa_intent.putStringArrayListExtra("soundname", sampleNames);
-                _currentActivity.startActivityForResult(pa_intent,
+                _droidDrumzActivity.startActivityForResult(pa_intent,
                         DroidDrumzAlphaMain._SINGLE_SOUND_CODE_);
 
                 return false;

@@ -22,6 +22,7 @@
 package com.droid.c4po.droiddrumz_alpha;
 
 import android.app.Activity;
+import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -136,9 +137,10 @@ public class IO_Man {
      *                      Returns an Array List of type String.
      * @throws Exception
      */
-    public static  ArrayList<String> getStringArrayListFromFileName(
-            String filename, Activity activity) throws Exception {
-        _fileInputStream = activity.openFileInput(filename);
+    public static ArrayList<String> getStringArrayListFromFileName(
+            String filename, Context context/*Activity activity*/) throws Exception {
+        //_fileInputStream = activity.openFileInput(filename);
+        _fileInputStream = context.openFileInput(filename);
         ArrayList<String> data = convertStreamToStringList(_fileInputStream);
         _fileInputStream.close();
         return data;

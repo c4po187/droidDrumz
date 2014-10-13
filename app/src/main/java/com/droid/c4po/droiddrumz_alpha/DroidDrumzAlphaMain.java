@@ -77,7 +77,7 @@ public class DroidDrumzAlphaMain extends Activity {
 
         // Init other classes
         _soundManager = new SoundManager(12, AudioManager.STREAM_MUSIC, 0, this);
-        _soundManager.init();
+        _soundManager.init(this);
         Container container = new Container(this, _soundManager);
         _menuManager = new MenuManager(this);
     }
@@ -114,9 +114,10 @@ public class DroidDrumzAlphaMain extends Activity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        /* Handle action bar item clicks here. The action bar will
+         * automatically handle clicks on the Home/Up button, so long
+         * as you specify a parent activity in AndroidManifest.xml.
+         */
         int id = item.getItemId();
         if (id == R.id.action_about)
             _menuManager.actionBar_AboutSelected();

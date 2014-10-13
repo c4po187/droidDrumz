@@ -21,7 +21,8 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
-import android.app.Activity;
+//import android.app.Activity;
+import android.content.Context;
 import android.media.SoundPool;
 import android.util.Log;
 import org.jetbrains.annotations.*;
@@ -38,7 +39,8 @@ public class Sample implements Comparable<Sample> {
     private int         _soundID,
                         _resource_id;
     private String      _resource_name;
-    private Activity    _currentActivity;
+    private Context     _context;
+    //private Activity    _currentActivity;
     private SoundPool   _soundpool;
 
     /*********************************************************************
@@ -62,7 +64,8 @@ public class Sample implements Comparable<Sample> {
      *********************************************************************/
 
     public Sample initLoadSoundID() {
-        _soundID = _soundpool.load(_currentActivity, _resource_id, 1);
+        //_soundID = _soundpool.load(_currentActivity, _resource_id, 1);
+        _soundID = _soundpool.load(_context, _resource_id, 1);
         return this;
     }
 
@@ -70,9 +73,10 @@ public class Sample implements Comparable<Sample> {
      * Constructor *******************************************************
      *********************************************************************/
 
-    public Sample(SoundPool soundpool, Activity activity, int resId) {
+    public Sample(SoundPool soundpool, Context context/*Activity activity*/, int resId) {
         _soundpool = soundpool;
-        _currentActivity = activity;
+        //_currentActivity = activity;
+        _context = context;
         _resource_id = resId;
         init();
     }
@@ -87,8 +91,11 @@ public class Sample implements Comparable<Sample> {
      */
     private void init() {
         try {
+            /*
             _resource_name = _currentActivity.getApplicationContext()
                     .getResources().getResourceEntryName(_resource_id);
+            */
+            _resource_name = _context.getResources().getResourceEntryName(_resource_id);
         } catch (Exception e) {
             Log.e("Sample: ", "Something wicked happened, " + e.getMessage());
         }

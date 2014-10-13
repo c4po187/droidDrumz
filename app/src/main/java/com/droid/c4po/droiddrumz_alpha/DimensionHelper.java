@@ -21,102 +21,64 @@
 
 package com.droid.c4po.droiddrumz_alpha;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
 /**
- * Class that helps set the dimensions of elements upon launch.
- * Such a class is needed as we cannot rely on using absolute values
- * due to the fact that screen resolutions differ from device to device,
- * thus impacting the positioning and dimensions of elements respectively.
+ * Class that helps with dimensions based on the users device.
  */
 public class DimensionHelper {
 
-    /*********************************************************************
-     * Members ***********************************************************
-     *********************************************************************/
-
-    private static String _TAG_ = "DimensionHelper: ";
-
-    private int _screen_width;
-    private int _screen_height;
-    private Activity _activity;
-
-    /*********************************************************************
-     * Getters and Setters ***********************************************
-     *********************************************************************/
-
-    public int getScreenWidth() {
-        return _screen_width;
-    }
-
-    public int getScreenHeight() {
-        return _screen_height;
-    }
-
-    /*********************************************************************
-     * Constructor *******************************************************
-     *********************************************************************/
-
-    public DimensionHelper(Activity activity) {
-        _screen_height = 0;
-        _screen_width = 0;
-        _activity = activity;
-    }
-
-    /*********************************************************************
-     * Finalizer *********************************************************
-     *********************************************************************/
-
-    @Override
-    protected void finalize() throws Throwable {
-        _screen_height = _screen_width = 0;
-        if (_activity != null)
-            _activity = null;
-
-        super.finalize();
-    }
-
-    /*********************************************************************
-     * Methods ***********************************************************
-     *********************************************************************/
-
     /**
-     * Method that calculates the screen dimensions on the users device.
+     * Method that returns a Point representing the screen resolution of the user's device.
+     * X = Width, Y = Height.
+     *
+     * @param context       :
+     *                      Parameter represents a reference to a context.
+     * @return              :
+     *                      Returns a Point.
+     * @throws Exception
      */
-    public void calculateScreenDimensions() {
-        WindowManager winManager = _activity.getWindowManager();
-        Display display = winManager.getDefaultDisplay();
+    public static Point calculateDeviceScreenResolution(Context context) throws Exception {
+        WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
 
-        /* Depending on which SDK range we are using, we calculate
-           the devices dimensions using different methods.
-         */
-        if (Build.VERSION.SDK_INT >= 1 && Build.VERSION.SDK_INT < 14) {
-            _screen_width = metrics.widthPixels;
-            _screen_height = metrics.heightPixels;
-        } else if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17) {
-            try {
-                _screen_width = (Integer)Display.class.getMethod("getRawWidth").invoke(display);
-                _screen_height = (Integer)Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (Exception e) {
-                Log.e(_TAG_, "Could not retrieve raw dimensions because, " + e.getMessage());
-            }
-        } else /* SDK 17 and upwards */ {
-            try {
-                Point realSize = new Point();
-                Display.class.getMethod("getRealSize", Point.class).invoke(display, realSize);
-                _screen_width = realSize.x;
-                _screen_height = realSize.y;
-            } catch (Exception e) {
-                Log.e(_TAG_, "Could not retrieve rel dimensions because, " + e.getMessage());
-            }
+        if (Build.VERSION.SDK_INT >= 1 && Build.VERSION.SDK_INT < 14)
+            return new Point(metrics.widthPixels, metrics.heightPixels);
+        else if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17)
+            return new Point((Integer)Display.class.getMethod("getRawWidth").invoke(display),
+                    (Integer)Display.class.getMethod("getRawHeight").invoke(display));
+        else {
+            Point realSize = new Point();
+            Display.class.getMethod("getRealSize", Point.class).invoke(display, realSize);
+            return realSize;
         }
+    }
+
+    /**
+     * Method that gets the screen area in pixels squared.
+     *
+     * @param context   :
+     *                  Parameter represents a reference to a context.
+     * @return          :
+     *                  Returns width multiplied by height as int.
+     *                  If the calculation of the screen resolution fails,
+     *                  (the first step in the algorithm) zero will be returned
+     *                  due to the point being initialized to zero on X and Y.
+     */
+    public static int getScreenArea(Context context) {
+        Point resolution = new Point(0, 0);
+        try {
+            resolution = calculateDeviceScreenResolution(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (resolution.x * resolution.y);
     }
 }
